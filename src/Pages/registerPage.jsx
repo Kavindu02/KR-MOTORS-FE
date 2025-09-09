@@ -4,7 +4,7 @@ import axios from "axios";
 import toast from "react-hot-toast";
 
 export default function RegisterPage() {
-  const navigate = useNavigate(); // useNavigate hook එක
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -31,125 +31,109 @@ export default function RegisterPage() {
         `${import.meta.env.VITE_BACKEND_URL}/users`,
         formData
       );
-      toast.success(res.data.message);
 
-      // Sign up success උනාම login page එකට navigate වෙනවා
+      toast.success(res.data.message);
       navigate("/login");
     } catch (error) {
+      console.error("Signup error:", error); // 🔍 debug
       toast.error(error.response?.data?.message || "Signup failed");
     }
   };
 
   return (
-    <div className="w-full h-screen bg-[url(./loginbg.jpg)] bg-cover bg-center flex justify-end items-center">
-      {/* Transparent Box */}
-      <div className="w-[500px] h-[800px] backdrop-blur-2xl bg-white/10 border border-white/20 
-                      rounded-[30px] shadow-2xl text-white flex flex-col items-center p-8 mr-10">
-        <h1 className="text-4xl font-bold text-center mb-6">Sign Up</h1>
+    <div className="flex items-center justify-center min-h-screen bg-slate-950 text-slate-200 px-6">
+      <div className="w-full max-w-lg bg-slate-900/80 border border-white/10 rounded-3xl shadow-2xl p-8">
+        <h1 className="text-3xl font-bold text-center text-red-500 mb-6">Sign Up</h1>
 
-        <form className="w-full flex flex-col gap-4" onSubmit={handleSubmit}>
-          {/* First Name */}
+        <form className="flex flex-col gap-1" onSubmit={handleSubmit}>
           <div className="flex flex-col gap-2">
-            <span className="text-lg">First Name</span>
+            <span className="text-sm">First Name</span>
             <input
               type="text"
               name="firstName"
               value={formData.firstName}
               onChange={handleChange}
-              className="w-full h-[45px] border border-white rounded-md px-3 
-                       bg-white/20 placeholder-white/60 focus:outline-none"
               placeholder="Enter your first name"
+              className="h-[45px] bg-slate-800/40 border border-white/20 rounded-xl px-3 placeholder-slate-400 focus:outline-none"
               required
             />
           </div>
 
-          {/* Last Name */}
           <div className="flex flex-col gap-2">
-            <span className="text-lg">Last Name</span>
+            <span className="text-sm">Last Name</span>
             <input
               type="text"
               name="lastName"
               value={formData.lastName}
               onChange={handleChange}
-              className="w-full h-[45px] border border-white rounded-md px-3 
-                       bg-white/20 placeholder-white/60 focus:outline-none"
               placeholder="Enter your last name"
+              className="h-[45px] bg-slate-800/40 border border-white/20 rounded-xl px-3 placeholder-slate-400 focus:outline-none"
               required
             />
           </div>
 
-          {/* Email */}
           <div className="flex flex-col gap-2">
-            <span className="text-lg">Email</span>
+            <span className="text-sm">Email</span>
             <input
               type="email"
               name="email"
               value={formData.email}
               onChange={handleChange}
-              className="w-full h-[45px] border border-white rounded-md px-3 
-                       bg-white/20 placeholder-white/60 focus:outline-none"
               placeholder="Enter your email"
+              className="h-[45px] bg-slate-800/40 border border-white/20 rounded-xl px-3 placeholder-slate-400 focus:outline-none"
               required
             />
           </div>
 
-          {/* Phone */}
           <div className="flex flex-col gap-2">
-            <span className="text-lg">Phone</span>
+            <span className="text-sm">Phone</span>
             <input
               type="text"
               name="phone"
               value={formData.phone}
               onChange={handleChange}
-              className="w-full h-[45px] border border-white rounded-md px-3 
-                       bg-white/20 placeholder-white/60 focus:outline-none"
               placeholder="Enter your phone"
+              className="h-[45px] bg-slate-800/40 border border-white/20 rounded-xl px-3 placeholder-slate-400 focus:outline-none"
             />
           </div>
 
-          {/* Password */}
           <div className="flex flex-col gap-2">
-            <span className="text-lg">Password</span>
+            <span className="text-sm">Password</span>
             <input
               type="password"
               name="password"
               value={formData.password}
               onChange={handleChange}
-              className="w-full h-[45px] border border-white rounded-md px-3 
-                       bg-white/20 placeholder-white/60 focus:outline-none"
               placeholder="Enter password"
+              className="h-[45px] bg-slate-800/40 border border-white/20 rounded-xl px-3 placeholder-slate-400 focus:outline-none"
               required
             />
           </div>
 
-          {/* Confirm Password */}
           <div className="flex flex-col gap-2">
-            <span className="text-lg">Confirm Password</span>
+            <span className="text-sm">Confirm Password</span>
             <input
               type="password"
               name="confirmPassword"
               value={formData.confirmPassword}
               onChange={handleChange}
-              className="w-full h-[45px] border border-white rounded-md px-3 
-                       bg-white/20 placeholder-white/60 focus:outline-none"
               placeholder="Confirm password"
+              className="h-[45px] bg-slate-800/40 border border-white/20 rounded-xl px-3 placeholder-slate-400 focus:outline-none"
               required
             />
           </div>
 
-          {/* Button */}
           <button
             type="submit"
-            className="w-full h-[45px] bg-red-500 rounded-xl text-white text-lg mt-4 
-             hover:bg-red-600 transition-all duration-300 cursor-pointer"
+            className="h-[45px] bg-red-600 hover:bg-red-700 transition-all duration-300 rounded-xl font-medium"
           >
             Create Account
           </button>
         </form>
 
-        <p className="mt-4 text-sm">
+        <p className="mt-4 text-sm text-center">
           Already Have An Account?{" "}
-          <Link to="/login" className="text-red-400 underline">
+          <Link to="/login" className="text-red-400 hover:text-red-300 underline">
             Login
           </Link>
         </p>

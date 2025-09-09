@@ -21,9 +21,7 @@ export default function OrdersPageAdmin() {
       const res = await axios.get(
         `${import.meta.env.VITE_BACKEND_URL}/orders/${page}/${limit}`,
         {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
         }
       );
       setOrders(res.data.orders);
@@ -40,42 +38,51 @@ export default function OrdersPageAdmin() {
     fetchOrders();
   }, [page, limit]);
 
+  const handleUpdateOrder = async () => {
+    if (!clickOrder) return;
+
+    try {
+      // Use orderId instead of _id
+      const res = await axios.put(
+        `${import.meta.env.VITE_BACKEND_URL}/orders/${clickOrder.orderId}`,
+        {
+          status: orderStatus,
+          notes: ordernotes,
+        },
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        }
+      );
+      console.log(res.data);
+      toast.success("Order updated!");
+      fetchOrders(); // Refresh orders
+      setPopupVisible(false);
+    } catch (err) {
+      console.error("Update error:", err.response ? err.response.data : err.message);
+      toast.error("Failed to update order");
+    }
+  };
+
   return (
-    <div className="w-full h-full flex flex-col p-6">
+    <div className="w-full h-full flex flex-col p-6 bg-slate-950 text-slate-200">
       {loading ? (
         <div className="w-full h-full flex justify-center items-center text-xl font-semibold">
           <Loader />
         </div>
       ) : (
         <>
-          <div className="overflow-x-auto bg-white shadow-lg rounded-lg">
-            <table className="w-full border-collapse border border-gray-300">
-              <thead className="bg-gray-800 text-white">
+          <div className="overflow-x-auto shadow-2xl rounded-2xl bg-slate-800/90 border border-slate-700">
+            <table className="w-full text-slate-200 border-collapse border border-slate-700">
+              <thead className="bg-slate-900 text-red-500">
                 <tr>
-                  <th className="p-3 text-left font-semibold border-b border-gray-300">
-                    Order ID
-                  </th>
-                  <th className="p-3 text-left font-semibold border-b border-gray-300">
-                    Customer Name
-                  </th>
-                  <th className="p-3 text-left font-semibold border-b border-gray-300">
-                    Email
-                  </th>
-                  <th className="p-3 text-left font-semibold border-b border-gray-300">
-                    Address
-                  </th>
-                  <th className="p-3 text-left font-semibold border-b border-gray-300">
-                    Phone
-                  </th>
-                  <th className="p-3 text-left font-semibold border-b border-gray-300">
-                    Status
-                  </th>
-                  <th className="p-3 text-left font-semibold border-b border-gray-300">
-                    Date
-                  </th>
-                  <th className="p-3 text-right font-semibold border-b border-gray-300">
-                    Total
-                  </th>
+                  <th className="p-3 text-left font-semibold border-b border-slate-700">Order ID</th>
+                  <th className="p-3 text-left font-semibold border-b border-slate-700">Customer Name</th>
+                  <th className="p-3 text-left font-semibold border-b border-slate-700">Email</th>
+                  <th className="p-3 text-left font-semibold border-b border-slate-700">Address</th>
+                  <th className="p-3 text-left font-semibold border-b border-slate-700">Phone</th>
+                  <th className="p-3 text-left font-semibold border-b border-slate-700">Status</th>
+                  <th className="p-3 text-left font-semibold border-b border-slate-700">Date</th>
+                  <th className="p-3 text-right font-semibold border-b border-slate-700">Total</th>
                 </tr>
               </thead>
 
@@ -84,10 +91,10 @@ export default function OrdersPageAdmin() {
                   orders.map((order, index) => (
                     <tr
                       key={index}
-                      className="border-b border-gray-300 text-black transition-transform hover:-translate-y-1 duration-200 hover:bg-red-400 hover:text-white cursor-pointer"
+                      className="border-b border-slate-700 hover:-translate-y-1 hover:bg-red-500 hover:text-white transition-transform cursor-pointer"
                       onClick={() => {
                         setOrderStatus(order.status);
-                        setOrderNotes(order.notes);
+                        setOrderNotes(order.notes || "");
                         setClickOrder(order);
                         setPopupVisible(true);
                       }}
@@ -98,121 +105,57 @@ export default function OrdersPageAdmin() {
                       <td className="p-3">{order.address}</td>
                       <td className="p-3">{order.phone}</td>
                       <td className="p-3">{order.status}</td>
-                      <td className="p-3">
-                        {new Date(order.date).toLocaleDateString()}
-                      </td>
-                      <td className="p-3 text-right font-medium text-gray-800">
-                        Rs {order.total}
-                      </td>
+                      <td className="p-3">{new Date(order.date).toLocaleDateString()}</td>
+                      <td className="p-3 text-right font-medium text-slate-200">Rs {order.total}</td>
                     </tr>
                   ))
                 ) : (
                   <tr>
-                    <td colSpan="8" className="text-center p-6 text-gray-500">
-                      No orders found.
-                    </td>
+                    <td colSpan="8" className="text-center p-6 text-slate-400">No orders found.</td>
                   </tr>
                 )}
               </tbody>
             </table>
 
-            {/* 🔹 Popup */}
+            {/* Popup */}
             {popupVisible && clickOrder && (
-              <div className="fixed top-0 left-0 w-full h-full bg-[#00000050] flex justify-center items-center z-50">
-                <div className="w-[700px] max-h-[760px] bg-white rounded-2xl shadow-xl relative p-6">
-
-                  {/* Save Changes Button */}
-                  {(orderStatus !== clickOrder.status ||
-                    ordernotes !== clickOrder.notes) && (
-                    <button
-                      className="absolute top-3 right-2 w-[150px] h-[40px] bg-gray-700 text-white rounded-lg cursor-pointer"
-                      onClick={async () => {
-                        try {
-                          await axios.put(
-                            `${import.meta.env.VITE_BACKEND_URL}/orders/${clickOrder.orderId}`,
-                            {
-                              status: orderStatus,
-                              notes: ordernotes,
-                            },
-                            {
-                              headers: {
-                                Authorization: `Bearer ${localStorage.getItem(
-                                  "token"
-                                )}`,
-                              },
-                            }
-                          );
-                          toast.success("Order Updated Successfully");
-                          fetchOrders(); 
-                          setPopupVisible(false);
-                        } catch (err) {
-                          console.error(err);
-                          toast.error("Failed to update order");
-                        }
-                      }}
-                    >
-                      Save Changes
-                    </button>
-                  )}
-
-                  {/* Close Button */}
+              <div className="fixed top-0 left-0 w-full h-full bg-[#00000050] flex justify-center items-start z-50 overflow-y-auto py-8">
+                <div className="w-[550px] bg-slate-800 rounded-2xl shadow-xl relative p-6 text-slate-200">
+                  
+                  {/* Close button */}
                   <button
-                    className="absolute w-[35px] h-[35px] bg-red-500 border-2 border-red-600 text-white top-[-20px] right-[-20px] rounded-full cursor-pointer hover:bg-transparent hover:text-red-500 font-bold flex items-center justify-center"
+                    className="absolute w-[35px] h-[35px] bg-red-600 text-white top-[-20px] right-[-20px] rounded-full cursor-pointer hover:bg-transparent hover:text-red-500 font-bold flex items-center justify-center"
                     onClick={() => setPopupVisible(false)}
                   >
                     ✕
                   </button>
 
-                  {/* Order Header */}
-                  <h2 className="text-2xl font-bold mb-4 text-gray-800">
-                    Order Details -{" "}
-                    <span className="text-red-600">{clickOrder.orderId}</span>
+                  <h2 className="text-2xl font-bold mb-4 text-red-500">
+                    Order Details - {clickOrder.orderId}
                   </h2>
-                  <p className="text-sm text-gray-500 mb-6">
+                  <p className="text-sm text-slate-300 mb-6">
                     Placed on: {new Date(clickOrder.date).toLocaleString()}
                   </p>
 
-                  {/* Customer Info */}
                   <div className="mb-6">
-                    <h3 className="text-lg font-semibold mb-2 text-gray-700">
-                      Customer Information
-                    </h3>
-                    <div className="grid grid-cols-2 gap-4 text-sm text-gray-700">
-                      <p>
-                        <span className="font-medium">Name:</span>{" "}
-                        {clickOrder.name}
-                      </p>
-                      <p>
-                        <span className="font-medium">Email:</span>{" "}
-                        {clickOrder.email}
-                      </p>
-                      <p>
-                        <span className="font-medium">Phone:</span>{" "}
-                        {clickOrder.phone}
-                      </p>
-                      <p>
-                        <span className="font-medium">Address:</span>{" "}
-                        {clickOrder.address}
-                      </p>
+                    <h3 className="text-lg font-semibold mb-2 text-slate-200">Customer Information</h3>
+                    <div className="grid grid-cols-2 gap-4 text-sm text-slate-200">
+                      <p><span className="font-medium">Name :  </span> {clickOrder.name}</p>
+                      <p><span className="font-medium">Email :  </span> {clickOrder.email}</p>
+                      <p><span className="font-medium">Phone :  </span> {clickOrder.phone}</p>
+                      <p><span className="font-medium">Address :  </span> {clickOrder.address}</p>
                     </div>
                   </div>
 
-                  {/* Order Status */}
                   <div className="mb-6">
-                    <h3 className="text-lg font-semibold mb-2 text-gray-700">Order Status</h3>
+                    <h3 className="text-lg font-semibold mb-2 text-slate-200">Order Status</h3>
                     <span
                       className={`px-3 py-1 rounded-full text-sm font-medium ${
-                        clickOrder.status === "pending"
-                          ? "bg-yellow-100 text-yellow-700"
-                          : ""
+                        clickOrder.status === "pending" ? "bg-yellow-100 text-yellow-700" : ""
                       } ${
-                        clickOrder.status === "completed"
-                          ? "bg-green-100 text-green-700"
-                          : ""
+                        clickOrder.status === "completed" ? "bg-green-100 text-green-700" : ""
                       } ${
-                        clickOrder.status === "cancelled"
-                          ? "bg-red-100 text-red-700"
-                          : ""
+                        clickOrder.status === "cancelled" ? "bg-red-100 text-red-700" : ""
                       }`}
                     >
                       {clickOrder.status}
@@ -222,31 +165,20 @@ export default function OrdersPageAdmin() {
                       value={orderStatus}
                       onChange={(e) => setOrderStatus(e.target.value)}
                     >
-                      <option value="pending">Pending</option>
-                      <option value="completed">Completed</option>
-                      <option value="cancelled">Cancelled</option>
+                      <option value="Pending">Pending</option>
+                      <option value="Completed">Completed</option>
+                      <option value="Cancelled">Cancelled</option>
                     </select>
                   </div>
 
-                  {/* Notes */}
                   <div className="mb-6">
-                    <h3 className="text-lg font-semibold mb-2 text-gray-700">Notes</h3>
-                    <p className="text-sm text-gray-600 italic">{clickOrder.notes}</p>
-                    <textarea
-                      className="w-full h-[50px] p-2 border rounded mt-2 text-gray-700"
-                      value={ordernotes}
-                      onChange={(e) => setOrderNotes(e.target.value)}
-                    ></textarea>
-                  </div>
-
-                  {/* Items */}
-                  <div className="mb-6">
-                    <h3 className="text-lg font-semibold mb-2 text-gray-700">Items</h3>
-                    <div className="space-y-4 max-h-[150px] overflow-y-auto">
+                    <h3 className="text-lg font-semibold mb-2 text-slate-200">Items</h3>
+                    
+                    <div className="space-y-4 max-h-[200px] overflow-y-auto scrollbar-thin scrollbar-thumb-red-500 scrollbar-track-slate-700 p-1 rounded">
                       {clickOrder.items.map((item) => (
                         <div
                           key={item._id}
-                          className="flex items-center gap-4 p-3 border rounded-lg shadow-sm"
+                          className="flex items-center gap-4 p-3 border rounded-lg shadow-sm bg-slate-700/40"
                         >
                           <img
                             src={item.image}
@@ -254,32 +186,34 @@ export default function OrdersPageAdmin() {
                             className="w-16 h-16 object-cover rounded-md border"
                           />
                           <div className="flex-1">
-                            <p className="font-medium text-gray-800">
-                              {item.productName}
-                            </p>
-                            <p className="text-sm text-gray-500">Qty: {item.qty}</p>
+                            <p className="font-medium text-slate-200">{item.productName}</p>
+                            <p className="text-sm text-slate-300">Qty: {item.qty}</p>
                           </div>
-                          <p className="font-semibold text-gray-700">
-                            Rs. {item.price * item.qty}
-                          </p>
+                          <p className="font-semibold text-slate-200">Rs. {item.price * item.qty}</p>
                         </div>
                       ))}
                     </div>
                   </div>
 
-                  {/* Total */}
                   <div className="flex justify-between items-center border-t pt-4">
-                    <span className="text-xl font-bold text-gray-800">Total</span>
-                    <span className="text-xl font-bold text-blue-600">
-                      Rs. {clickOrder.total}
-                    </span>
+                    <span className="text-xl font-bold text-slate-200">Total</span>
+                    <span className="text-xl font-bold text-blue-600">Rs. {clickOrder.total}</span>
+                  </div>
+
+                  {/* Buttons */}
+                  <div className="mt-6 flex justify-end gap-3">
+                    <button
+                      className="px-5 py-2 rounded-lg bg-red-600 text-white hover:bg-red-600 hover:bg-red-700 transition duration-300"
+                      onClick={handleUpdateOrder}
+                    >
+                      Update
+                    </button>
                   </div>
                 </div>
               </div>
             )}
           </div>
 
-          {/* Pagination */}
           <div className="mt-4">
             <Paginator
               currentPage={page}

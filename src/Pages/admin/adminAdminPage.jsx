@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { BiTrash } from "react-icons/bi";
+import { BiTrash, BiEditAlt } from "react-icons/bi";
 import { HiMiniPlusCircle } from "react-icons/hi2";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -19,9 +19,10 @@ export default function AdminAdminPage() {
     }
 
     try {
-      const res = await axios.get(import.meta.env.VITE_BACKEND_URL + "/users/admins", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const res = await axios.get(
+        import.meta.env.VITE_BACKEND_URL + "/users/admins",
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
       setAdmins(Array.isArray(res.data) ? res.data : []);
     } catch (err) {
       console.error(err);
@@ -46,9 +47,12 @@ export default function AdminAdminPage() {
     }
 
     try {
-      await axios.delete(import.meta.env.VITE_BACKEND_URL + "/users/admins/" + encodeURIComponent(email), {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      await axios.delete(
+        import.meta.env.VITE_BACKEND_URL +
+          "/users/admins/" +
+          encodeURIComponent(email),
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
       toast.success("Admin deleted successfully");
       setAdmins((prev) => prev.filter((a) => a.email !== email));
     } catch (err) {
@@ -58,14 +62,14 @@ export default function AdminAdminPage() {
   };
 
   return (
-    <div className="w-full h-full p-6 bg-gray-50">
+    <div className="w-full min-h-screen p-6 bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950">
       {isLoading ? (
         <Loader />
       ) : (
-        <div className="overflow-x-auto shadow-lg rounded-xl bg-white">
-          <table className="w-full text-left border-collapse">
+        <div className="overflow-x-auto shadow-2xl rounded-2xl bg-slate-800/90 border border-slate-700">
+          <table className="w-full text-left border-collapse text-slate-200">
             <thead>
-              <tr className="bg-gray-800 text-white text-sm uppercase">
+              <tr className="bg-slate-900 text-red-500 text-sm uppercase">
                 <th className="p-4">First Name</th>
                 <th className="p-4">Last Name</th>
                 <th className="p-4">Email</th>
@@ -77,22 +81,35 @@ export default function AdminAdminPage() {
             <tbody>
               {admins.length > 0 ? (
                 admins.map((admin, i) => (
-                  <tr key={i} className="border-b hover:bg-gray-100 transition-colors">
-                    <td className="p-4 font-medium text-gray-900">{admin.firstName}</td>
-                    <td className="p-4 font-medium text-gray-900">{admin.lastName}</td>
-                    <td className="p-4 text-gray-700">{admin.email}</td>
-                    <td className="p-4 text-gray-700">{admin.phone}</td>
-                    <td className="p-4 flex items-center justify-center">
+                  <tr
+                    key={i}
+                    className="border-b border-slate-700 hover:bg-slate-700/40 transition-colors"
+                  >
+                    <td className="p-4 font-medium text-slate-200">
+                      {admin.firstName}
+                    </td>
+                    <td className="p-4 font-medium text-slate-200">
+                      {admin.lastName}
+                    </td>
+                    <td className="p-4 text-slate-400">{admin.email}</td>
+                    <td className="p-4 text-slate-400">{admin.phone}</td>
+
+                    {/* Delete*/}
+                    <td className="p-4 flex items-center justify-center gap-3">
                       <BiTrash
                         className="bg-red-600 p-2 text-3xl rounded-full text-white shadow cursor-pointer hover:bg-red-700 transition"
                         onClick={() => handleDelete(admin.email)}
                       />
+                      
                     </td>
                   </tr>
                 ))
               ) : (
                 <tr>
-                  <td colSpan="5" className="text-center p-6 text-gray-600 font-medium">
+                  <td
+                    colSpan="5"
+                    className="text-center p-6 text-slate-400 font-medium"
+                  >
                     No admins found
                   </td>
                 </tr>
@@ -104,7 +121,7 @@ export default function AdminAdminPage() {
 
       <Link
         to="/admin/newadmin"
-        className="fixed right-10 bottom-10 text-white bg-black p-3 rounded-full shadow-lg hover:bg-gray-800 transition"
+        className="fixed right-10 bottom-10 text-white bg-red-600 p-4 rounded-full shadow-xl hover:bg-red-700 transition"
       >
         <HiMiniPlusCircle className="text-5xl" />
       </Link>

@@ -10,7 +10,6 @@ export default function ProfilePage() {
   const token = localStorage.getItem("token");
 
   useEffect(() => {
-    console.log("Token:", token); // Debug token
     if (!token) {
       setError("No token found, please login first");
       toast.error("Please login first");
@@ -20,24 +19,19 @@ export default function ProfilePage() {
 
     axios
       .get(`${import.meta.env.VITE_BACKEND_URL}/users`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        headers: { Authorization: `Bearer ${token}` },
       })
       .then((res) => {
-        console.log("Raw response:", res); // Debug full response
-        const data = res.data; // Check if data is nested
-        console.log("Profile data received:", data); // Debug data
+        const data = res.data;
         if (data.role === "admin") {
           toast.error("Admins cannot access this page");
           navigate("/admin");
           return;
         }
-        setUser(data); // Set user state with received data
+        setUser(data);
         setError(null);
       })
       .catch((err) => {
-        console.error("Error fetching profile:", err.response || err);
         const errorMessage = err.response?.data?.message || "Failed to load profile";
         setError(errorMessage);
         toast.error(errorMessage);
@@ -46,27 +40,60 @@ export default function ProfilePage() {
       });
   }, [token, navigate]);
 
-  // Debug state after render
-  console.log("User state:", user);
+  if (error)
+    return (
+      <div className="flex justify-center items-center h-screen bg-slate-950 text-red-500">
+        <p className="text-lg">{error}</p>
+      </div>
+    );
 
-  if (error) {
-    return <div className="text-white p-5">Error: {error}</div>;
-  }
-
-  if (!user) {
-    return <div className="text-white p-5">Loading profile...</div>;
-  }
+  if (!user)
+    return (
+      <div className="flex justify-center items-center h-screen bg-slate-950 text-slate-200">
+        <p className="text-lg animate-pulse">Loading profile...</p>
+      </div>
+    );
 
   return (
-    <div className="max-w-3xl mx-auto mt-10 p-6 bg-gray-800 rounded-xl text-white backdrop-blur-md">
-      <h1 className="text-3xl font-bold mb-6">Profile</h1>
-      <div className="space-y-4">
-        <p><strong>First Name:</strong> {user.firstName || "Not Provided"}</p>
-        <p><strong>Last Name:</strong> {user.lastName || "Not Provided"}</p>
-        <p><strong>Email:</strong> {user.email || "Not Provided"}</p>
-        <p><strong>Phone:</strong> {user.phone || "Not Provided"}</p>
-        {/* <p><strong>Role:</strong> {user.role || "Not Provided"}</p> */}
-        {user.image && <img src={user.image} alt="Profile" className="w-24 h-24 rounded-full mt-4" />}
+    <div className="min-h-screen flex justify-center items-start py-10 px-4 bg-slate-950 text-slate-200">
+      <div className="w-full max-w-md bg-slate-800 shadow-xl rounded-2xl p-10">
+        <div className="flex flex-col items-center">
+          {user.image ? (
+            <img
+              src={user.image}
+              alt="Profile"
+              className="w-28 h-28 rounded-full border-4 border-red-500 shadow-lg"
+            />
+          ) : (
+            <div className="w-28 h-28 rounded-full bg-slate-700 flex items-center justify-center text-2xl font-bold text-red-500 shadow-lg">
+              {user.firstName?.charAt(0) || "U"}
+              {user.lastName?.charAt(0) || "U"}
+            </div>
+          )}
+          <h1 className="mt-4 text-2xl font-bold text-red-500">
+            {user.firstName} {user.lastName}
+          </h1>
+         
+        </div>
+
+        <div className="mt-8 space-y-4">
+          <div className="flex items-center bg-slate-700 rounded-2xl p-4 gap-2">
+            <span className="font-semibold text-slate-300">First Name :</span>
+            <span className="text-slate-200">{user.firstName || "Not Provided"}</span>
+          </div>
+          <div className="flex items-center bg-slate-700 rounded-2xl p-4 gap-2">
+            <span className="font-semibold text-slate-300">Last Name : </span>
+            <span className="text-slate-200">{user.lastName || "Not Provided"}</span>
+          </div>
+          <div className="flex items-center bg-slate-700 rounded-2xl p-4 gap-2">
+            <span className="font-semibold text-slate-300">Email : </span>
+            <span className="text-slate-200">{user.email || "Not Provided"}</span>
+          </div>
+          <div className="flex items-center bg-slate-700 rounded-2xl p-4 gap-2">
+            <span className="font-semibold text-slate-300">Phone : </span>
+            <span className="text-slate-200">{user.phone || "Not Provided"}</span>
+          </div>
+        </div>
       </div>
     </div>
   );

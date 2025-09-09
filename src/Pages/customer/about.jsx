@@ -1,96 +1,97 @@
+import { FaCarSide, FaFacebookF, FaInstagram, FaTiktok, FaWhatsapp } from "react-icons/fa";
 import { Link } from "react-router-dom";
-import { FaVideo } from "react-icons/fa";
 
 export default function AboutUs() {
   return (
-    <div className="flex flex-col min-h-screen">
-      {/* About Section with gradient background */}
-      <section className="text-center py-20 bg-gradient-to-r from-gray-400 to-gray-100 text-white flex-grow px-6">
+    <div className="flex flex-col min-h-screen bg-slate-950 text-slate-200">
+      {/* About Section */}
+      <section className="text-center py-20 flex-grow px-6 bg-slate-900/80">
         {/* Heading */}
         <h1 className="text-4xl font-bold text-red-500 mb-4">ABOUT US</h1>
-        
+
         {/* Sub Heading */}
-        <h2 className="text-lg text-gray-700 font-semibold leading-relaxed">
-          Specialists in Security Camera Systems, Home Alarm Systems <br />
-          With Warranty and Technical Support. <br />
-          Unmatched Customer Support!
+        <h2 className="text-lg text-slate-300 font-semibold leading-relaxed">
+          Genuine Vehicle Parts • Affordable Prices <br />
+          Islandwide Delivery with Warranty & Customer Support <br />
+          KR MOTORS – Your Trusted Auto Parts Shop!
         </h2>
 
         {/* Content */}
-        <div className="mt-8 max-w-4xl mx-auto text-gray-700 text-justify leading-relaxed space-y-8">
+        <div className="mt-8 max-w-4xl mx-auto text-slate-300 text-justify leading-relaxed space-y-8">
           <p>
-            microcctvsecuretysolution.shop is your trusted partner in Digital Video Surveillance.
-            We have a proven track record with over 04 years experience with Security
-            Cameras and Security Camera Systems. Our DVR systems come standard with
-            Live Remote Viewing which allows you to view your security system from
-            the comfort of your home, or on the road.
+            <strong>KR MOTORS</strong> is your reliable partner for high-quality vehicle parts and accessories. 
+            With years of experience, we supply genuine spare parts for cars, bikes, and trucks at the best prices. 
+            Our goal is to keep your vehicle performing at its best while saving you money and time.
           </p>
 
           <p>
-            Every piece of security system equipment we carry has been fully tested
-            to ensure our customers receive the best quality, performance and reliability.
-            We are authorized dealers for all the security camera system products you see
-            here, which allows us to offer the best pricing and an exceptional level of
-            customer services. Our Customer support is unmatched with our 1 year warranty
-            and lifetime technical support.
+            Every product we sell is carefully checked for quality and durability, ensuring that our customers 
+            receive only the best. As authorized dealers for top vehicle part brands, we are able to provide 
+            original parts with warranty and trusted after-sales service.
           </p>
 
           <p>
-            Our specialists provide the right solution from remote video surveillance
-            to HiMax DVR security camera systems for your businesses security needs and
-            home protection. After listening to your needs, we will provide you with a
-            Free custom quote that lies within your budget. Our goal is to make purchasing
-            a security system easy!
+            Whether you are looking for engine components, brake systems, body parts, or accessories, KR MOTORS 
+            offers a wide range of products to meet your needs. We also provide islandwide delivery so that you 
+            can get your required parts delivered to your doorstep quickly and safely.
           </p>
 
-          <p className="text-center italic">
-            Learn more about us and our products through this website….
+          <p className="text-center italic text-slate-400">
+            Choose KR MOTORS – where quality meets trust. Let us keep your vehicle running smoothly!
           </p>
         </div>
       </section>
 
-      {/* FOOTER (same as HomePage) */}
-      <footer className="bg-neutral-900 text-neutral-300">
+      {/* FOOTER (Admin/Home theme colors) */}
+      <footer className="bg-slate-900/90 text-slate-300 border-t border-white/10 mt-auto">
         <div className="max-w-6xl mx-auto px-6 py-12 grid md:grid-cols-4 gap-10">
+          {/* Brand */}
           <div>
             <div className="flex items-center gap-2 font-semibold text-white">
-              <FaVideo className="w-5 h-5" /> MicroCCTV
+              <FaCarSide className="w-5 h-5" /> KR MOTORS
             </div>
             <p className="mt-4 text-sm opacity-80">
-              We provide advanced security solutions, offering 24/7 protection with high-quality systems.
+              We provide genuine vehicle parts and accessories, affordable prices, 
+              and trusted service with islandwide delivery.
             </p>
           </div>
 
+          {/* Quick Links */}
           <div>
-            <h4 className="text-white font-semibold">Quick Link</h4>
+            <h4 className="text-white font-semibold">Quick Links</h4>
             <ul className="mt-4 space-y-2 text-sm">
-              <li><Link to="/" className="hover:text-white/90">HOME</Link></li>
-              <li><Link to="/shop" className="hover:text-white/90">SHOP</Link></li>
-              <li><Link to="/service" className="hover:text-white/90">SERVICE</Link></li>
-              <li><Link to="/about" className="hover:text-white/90">ABOUT</Link></li>
-              <li><Link to="/contact" className="hover:text-white/90">CONTACT</Link></li>
+              <li><Link to="/" className="hover:text-red-600 transition duration-300">HOME</Link></li>
+              <li><Link to="/shop" className="hover:text-red-600 transition duration-300">SHOP</Link></li>
+              <li><Link to="/about" className="hover:text-red-600 transition duration-300">ABOUT</Link></li>
+              <li><Link to="/contact" className="hover:text-red-600 transition duration-300">CONTACT</Link></li>
             </ul>
           </div>
 
+          {/* Services */}
           <div>
             <h4 className="text-white font-semibold">Services</h4>
             <ul className="mt-4 space-y-2 text-sm">
-              <li>24/7 service</li>
-              <li>CCTV Installation</li>
-              <li>Alarm system installation</li>
+              <li>Genuine Auto Parts</li>
+              <li>Islandwide Delivery</li>
+              <li>Warranty & Returns</li>
             </ul>
           </div>
 
+          {/* Contact Info */}
           <div>
             <h4 className="text-white font-semibold">Contact Us</h4>
             <ul className="mt-4 space-y-2 text-sm">
-              <li className="text-gray-500">+94 768 841 006</li>
-              <li className="text-gray-500">tharangaviii36@gmail.com</li>
+             <li><a href="#" className="hover:text-red-600 transition duration-300">+94 704150080</a></li>
+              <li><a href="#" className="hover:text-red-600 transition duration-300">krmotorssl@gmail.com</a></li>
             </ul>
+            <div className="flex gap-3 mt-4 text-white">
+              <a href="https://www.facebook.com/profile.php?id=61557530297240" className="hover:text-red-600 transition duration-300"><FaFacebookF /></a>
+              <a href="https://www.tiktok.com/@kr_motors_alawwa" className="hover:text-red-600 transition duration-300"><FaTiktok/></a>
+            </div>
           </div>
         </div>
-        <div className="text-center text-xs py-4 border-t border-white/10">
-          Copyright © {new Date().getFullYear()} All Rights Reserved.
+        <div className="text-center text-xs py-4 border-t border-white/10 text-slate-400">
+          © {new Date().getFullYear()} KR MOTORS. All Rights Reserved.
         </div>
       </footer>
     </div>

@@ -3,77 +3,62 @@ import { useState } from "react";
 import toast from "react-hot-toast";
 
 export default function ForgetPasswordPage() {
-	const [emailSent, setEmailSent] = useState(false);
-	const [email, setEmail] = useState("");
-    const [otp, setOtp] = useState("");
-    const [newPassword, setNewPassword] = useState("");
-    const [confirmPassword, setConfirmPassword] = useState("");
+  const [emailSent, setEmailSent] = useState(false);
+  const [email, setEmail] = useState("");
+  const [otp, setOtp] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
 
-    async function sendOTP(){ 
-        try{
-            await axios.post(import.meta.env.VITE_BACKEND_URL+"/users/send-otp", { email:email });
-            toast.success("OTP sent successfully");
-            setEmailSent(true);
-        }catch{
-            toast.error("Failed to send OTP");
-        }
+  async function sendOTP() {
+    try {
+      console.log("Sending OTP to:", email);
+      const res = await axios.post(import.meta.env.VITE_BACKEND_URL + "/users/send-otp", { email });
+      console.log(res.data);
+      toast.success("OTP sent successfully");
+      setEmailSent(true);
+    } catch (err) {
+      console.error("Send OTP error:", err.response ? err.response.data : err.message);
+      toast.error("Failed to send OTP");
     }
-    async function resetPassword(){
-        if(newPassword !== confirmPassword){
-            toast.error("Passwords do not match");
-            return;
-        }
-        try{
-            await axios.post(import.meta.env.VITE_BACKEND_URL+"/users/reset-password", {
-                email: email,
-                otp: otp,
-                newPassword: newPassword
-            });
-            toast.success("Password reset successfully");
-        }catch{
-            toast.error("Failed to reset password");
-        }
+  }
+
+  async function resetPassword() {
+    if (newPassword !== confirmPassword) {
+      toast.error("Passwords do not match");
+      return;
     }
-	return (
-		<div className="w-full h-full flex justify-center items-center text-secondary">
-			{!emailSent&&<div className="bg-primary w-[500px] h-[500px] shadow-2xl flex flex-col items-center justify-center gap-[20px] rounded-[30px]">
-				<h1 className="text-2xl font-bold">Reset Password</h1>
-				<input
-					type="email"
-					placeholder="Enter your email"
-					className="w-[350px] h-[40px] border border-white rounded-xl text-center"
-					onChange={(e) => setEmail(e.target.value)}
-				/>
-				<button onClick={sendOTP} className="w-[350px] h-[40px] bg-red-500 rounded-xl text-white text-lg mt-5 hover:bg-red-600 transition-all duration-300">
-					Send OTP
-				</button>
-			</div>}
-            {
-                emailSent&& <div className="bg-primary w-[500px] h-[500px] shadow-2xl flex flex-col items-center justify-center gap-[20px] rounded-[30px]">
-                    <h1 className="text-2xl font-bold">Verify OTP</h1>
-                    <input
-                        type="text"
-                        placeholder="Enter OTP"
-                        className="w-[350px] h-[40px] border border-white rounded-xl text-center"
-                        onChange={(e) => setOtp(e.target.value)}
-                    />
-                    <input
-                        type="password"
-                        placeholder="Enter new password"
-                        className="w-[350px] h-[40px] border border-white rounded-xl text-center"
-                        onChange={(e) => setNewPassword(e.target.value)}
-                    />
-                    <input
-                        type="password"
-                        placeholder="Confirm new password"
-                        className="w-[350px] h-[40px] border border-white rounded-xl text-center"
-                        onChange={(e) => setConfirmPassword(e.target.value)}
-                    />
-                    <button onClick={resetPassword} className="w-[350px] h-[40px] bg-blue-500 rounded-xl text-white text-lg mt-5 hover:bg-blue-600 transition-all duration-300">
-                        Reset Password
-                    </button>
-                </div>
-            }
-		</div>
-	);
+    try {
+      const res = await axios.post(import.meta.env.VITE_BACKEND_URL + "/users/reset-password", { email, otp, newPassword });
+      console.log(res.data);
+      toast.success("Password reset successfully");
+      setEmailSent(false);
+      setEmail("");
+      setOtp("");
+      setNewPassword("");
+      setConfirmPassword("");
+    } catch (err) {
+      console.error("Reset password error:", err.response ? err.response.data : err.message);
+      toast.error(err.response?.data?.message || "Failed to reset password");
+    }
+  }
+
+  return (
+    <div className="w-full h-screen bg-gradient-to-br from-slate-950 via-slate-950 to-slate-950 flex justify-center items-center px-4 text-white">
+      {!emailSent ? (
+        <div className="w-[500px] h-[580px] bg-slate-900/80 rounded-[30px] shadow-xl flex flex-col items-center justify-center gap-6 p-8">
+          <h1 className="text-3xl font-bold text-red-500">Reset Password</h1>
+          <input type="email" placeholder="Enter your email" className="w-[350px] h-[45px] border border-white/20 rounded-lg px-3 bg-slate-900 text-slate-200 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-red-500" onChange={(e)=>setEmail(e.target.value)} />
+          <button onClick={sendOTP} className="w-[350px] h-[45px] bg-red-600 rounded-xl text-white text-lg mt-4 hover:bg-red-700 transition-all duration-300">Send OTP</button>
+        </div>
+      ) : (
+        <div className="w-[500px] h-[580px] bg-slate-800/90 rounded-[30px] shadow-xl flex flex-col items-center justify-center gap-5 p-8">
+          <h1 className="text-3xl font-bold text-red-500">Verify OTP</h1>
+          <input type="text" placeholder="Enter OTP" className="w-[350px] h-[45px] border border-white/20 rounded-lg px-3 bg-slate-900 text-slate-200 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-red-500" onChange={(e)=>setOtp(e.target.value)} />
+          <input type="password" placeholder="Enter new password" className="w-[350px] h-[45px] border border-white/20 rounded-lg px-3 bg-slate-900 text-slate-200 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-red-500" onChange={(e)=>setNewPassword(e.target.value)} />
+          <input type="password" placeholder="Confirm new password" className="w-[350px] h-[45px] border border-white/20 rounded-lg px-3 bg-slate-900 text-slate-200 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-red-500" onChange={(e)=>setConfirmPassword(e.target.value)} />
+          <button onClick={resetPassword} className="w-[350px] h-[45px] bg-red-600 rounded-xl text-white text-lg mt-4 hover:bg-red-700 transition-all duration-300">Reset Password</button>
+        </div>
+      )}
+    </div>
+  );
 }

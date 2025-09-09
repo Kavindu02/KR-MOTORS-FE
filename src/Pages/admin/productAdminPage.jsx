@@ -29,22 +29,21 @@ export default function ProductAdminPage() {
   }, [isLoading]);
 
   return (
-    <div className="w-full h-full p-6 bg-gray-50">
+    <div className="w-full min-h-screen p-6 bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950">
       {isLoading ? (
         <Loader />
       ) : (
-        <div className="overflow-x-auto shadow-lg rounded-xl bg-white">
-          <table className="w-full text-left border-collapse">
+        <div className="overflow-x-auto shadow-2xl rounded-2xl bg-slate-800/90 border border-slate-700">
+          <table className="w-full text-left border-collapse text-slate-200">
             {/* Table Head */}
             <thead>
-              <tr className="bg-gray-800 text-white text-sm uppercase">
+              <tr className="bg-slate-900 text-red-500 text-sm uppercase">
                 <th className="p-4">Image</th>
                 <th className="p-4">Product ID</th>
                 <th className="p-4">Product Name</th>
                 <th className="p-4">Label Price</th>
                 <th className="p-4">Price</th>
                 <th className="p-4">Stock</th>
-                <th className="p-4">Category</th>
                 <th className="p-4 text-center">Actions</th>
               </tr>
             </thead>
@@ -54,7 +53,7 @@ export default function ProductAdminPage() {
               {products.map((product, index) => (
                 <tr
                   key={index}
-                  className="border-b hover:bg-gray-100 transition-colors"
+                  className="border-b border-slate-700 hover:bg-slate-700/40 transition-colors"
                 >
                   {/* Image */}
                   <td className="p-4">
@@ -66,40 +65,37 @@ export default function ProductAdminPage() {
                   </td>
 
                   {/* Product ID */}
-                  <td className="p-4 text-gray-700">{product.productId}</td>
+                  <td className="p-4 text-slate-400">{product.productId}</td>
 
                   {/* Product Name */}
-                  <td className="p-4 font-medium text-gray-900">
+                  <td className="p-4 font-medium text-slate-200">
                     {product.name}
                   </td>
 
                   {/* Label Price */}
-                  <td className="p-4 text-gray-500">
-                    Rs{" "}{product.labellPrice}
+                  <td className="p-4 text-slate-400">
+                    Rs {product.labellPrice}
                   </td>
 
                   {/* Price */}
-                  <td className="p-4 text-red-600 font-semibold">
-                    Rs{" "}{product.price}
+                  <td className="p-4 text-red-500 font-semibold">
+                    Rs {product.price}
                   </td>
 
                   {/* Stock */}
                   <td
                     className={`p-4 font-medium ${
                       product.stock > 0
-                        ? "text-green-600"
-                        : "text-red-600 font-semibold"
+                        ? "text-green-400"
+                        : "text-red-500 font-semibold"
                     }`}
                   >
                     {product.stock}
                   </td>
 
-                  {/* Category */}
-                  <td className="p-4 text-gray-700">{product.category}</td>
-
                   {/* Actions */}
                   <td className="p-4 flex items-center justify-center gap-3">
-                    
+                    {/* Delete */}
                     <BiTrash
                       className="bg-red-600 p-2 text-3xl rounded-full text-white shadow cursor-pointer hover:bg-red-700 transition"
                       onClick={() => {
@@ -116,11 +112,10 @@ export default function ProductAdminPage() {
                               product.productId,
                             {
                               headers: {
-                                Authorization: `Bearer ${token}`,
-                              },
+                                Authorization: `Bearer ${token}` },
                             }
                           )
-                          .then((res) => {
+                          .then(() => {
                             toast.success("Product Deleted Successfully");
                             setisLoading(true);
                           })
@@ -131,14 +126,14 @@ export default function ProductAdminPage() {
                       }}
                     />
 
-                    
+                    {/* Edit */}
                     <BiEditAlt
                       onClick={() => {
                         navigate("/admin/updateproduct", {
                           state: product,
                         });
                       }}
-                      className="bg-gray-700 p-2 text-3xl rounded-full text-white shadow cursor-pointer hover:bg-gray-900 transition"
+                      className="bg-slate-600 p-2 text-3xl rounded-full text-white shadow cursor-pointer hover:bg-slate-700 transition"
                     />
                   </td>
                 </tr>
@@ -148,10 +143,10 @@ export default function ProductAdminPage() {
         </div>
       )}
 
-      
+      {/* Floating Add Button */}
       <Link
         to={"/admin/newproduct"}
-        className="fixed right-10 bottom-10 text-white bg-black p-3 rounded-full shadow-lg hover:bg-gray-800 transition"
+        className="fixed right-10 bottom-10 text-white bg-red-600 p-4 rounded-full shadow-xl hover:bg-red-700 transition"
       >
         <HiMiniPlusCircle className="text-5xl" />
       </Link>

@@ -133,7 +133,6 @@ export default function Header() {
           <div className="flex flex-col px-6 py-4 space-y-4">
             <Link to="/" onClick={() => setMenuOpen(false)} className="hover:text-red-500">Home</Link>
             <Link to="/shop" onClick={() => setMenuOpen(false)} className="hover:text-red-500">Shop</Link>
-            <Link to="/service" onClick={() => setMenuOpen(false)} className="hover:text-red-500">Service</Link>
             <Link to="/about" onClick={() => setMenuOpen(false)} className="hover:text-red-500">About</Link>
             <Link to="/contact" onClick={() => setMenuOpen(false)} className="hover:text-red-500">Contact</Link>
 

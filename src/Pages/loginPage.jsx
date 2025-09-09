@@ -15,24 +15,17 @@ export default function LoginPage() {
         .post(`${import.meta.env.VITE_BACKEND_URL}/users/googlelogin`, {
           token: response.access_token,
         })
-        .then((response) => {
-          console.log("Google login response:", response.data); // Debug log
-          localStorage.setItem("token", response.data.token);
-          console.log("Token saved:", localStorage.getItem("token")); // Debug token
+        .then((res) => {
+          localStorage.setItem("token", res.data.token);
           toast.success("Login Successful");
-          if (response.data.role === "admin") {
-            navigate("/admin");
-          } else {
-            navigate("/");
-          }
+          if (res.data.role === "admin") navigate("/admin");
+          else navigate("/");
         })
         .catch((error) => {
-          console.error("Google login error:", error.response || error);
           toast.error(error.response?.data?.message || "Google Login Failed");
         });
     },
     onError: () => {
-      console.error("Google login failed");
       toast.error("Google Login Failed");
     },
   });
@@ -40,64 +33,72 @@ export default function LoginPage() {
   function login() {
     axios
       .post(`${import.meta.env.VITE_BACKEND_URL}/users/login`, {
-        email: email,
-        password: password,
+        email,
+        password,
       })
-      .then((response) => {
-        console.log("Login response:", response.data); // Debug log
-        localStorage.setItem("token", response.data.token);
-        console.log("Token saved:", localStorage.getItem("token")); // Debug token
+      .then((res) => {
+        localStorage.setItem("token", res.data.token);
         toast.success("Login Successful");
-        if (response.data.role === "admin") {
-          navigate("/admin");
-        } else {
-          navigate("/");
-        }
+        if (res.data.role === "admin") navigate("/admin");
+        else navigate("/");
       })
       .catch((error) => {
-        console.error("Login error:", error.response || error);
         toast.error(error.response?.data?.message || "Login Failed");
       });
   }
 
   return (
-    <div className="w-full h-screen bg-[url(./loginbg.jpg)] bg-cover bg-center flex justify-end items-center px-10">
-      <div className="w-[500px] h-[580px] backdrop-blur-xs rounded-[30px] relative text-white gap-[20px] flex flex-col items-center shadow-[0_-15px_30px_rgba(0,0,0,0.6)] justify-center">
-        <h1 className="text-4xl font-bold text-center my-5 absolute top-[20px]">Login</h1>
-        <div className="w-[350px] flex flex-col items-start gap-2">
-          <span className="text-lg">Email</span>
+    <div className="flex items-center justify-center min-h-screen bg-slate-950 text-slate-200 px-6">
+      <div className="w-full max-w-md bg-slate-900/80 border border-white/10 rounded-3xl shadow-2xl p-8 flex flex-col gap-6">
+        <h1 className="text-3xl font-bold text-center text-red-500">Login</h1>
+
+        {/* Email */}
+        <div className="flex flex-col gap-2">
+          <span className="text-sm">Email</span>
           <input
+            type="email"
             onChange={(e) => setEmail(e.target.value)}
-            type="text"
-            className="w-[350px] h-[40px] border border-white rounded-[5px]"
+            className="w-full h-[45px] bg-slate-800/40 border border-white/20 rounded-xl px-3 placeholder-slate-400 focus:outline-none"
+            placeholder="Enter your email"
           />
         </div>
-        <div className="w-[350px] flex flex-col items-start gap-2">
-          <span className="text-lg">Password</span>
+
+        {/* Password */}
+        <div className="flex flex-col gap-2">
+          <span className="text-sm">Password</span>
           <input
-            onChange={(e) => setPassword(e.target.value)}
             type="password"
-            className="w-[350px] h-[40px] border border-white rounded-[5px]"
+            onChange={(e) => setPassword(e.target.value)}
+            className="w-full h-[45px] bg-slate-800/40 border border-white/20 rounded-xl px-3 placeholder-slate-400 focus:outline-none"
+            placeholder="Enter your password"
           />
         </div>
+
+        {/* Buttons */}
         <button
           onClick={login}
-          className="w-[350px] h-[40px] bg-red-600 rounded-xl text-white text-lg mt-5 hover:bg-red-700 transition-all duration-300 cursor-pointer"
+          className="w-full h-[45px] bg-red-600 hover:bg-red-700 transition-all duration-300 rounded-xl font-medium"
         >
           Login
         </button>
+
         <button
           onClick={googleLogin}
-          className="w-[350px] h-[40px] rounded-xl text-white text-lg mt-5 transition-all duration-300 cursor-pointer"
+          className="w-full h-[45px] bg-slate-700 hover:bg-slate-600 transition-all duration-300 rounded-xl flex items-center justify-center gap-2"
         >
-          <img src="/GoogleLogo.png" className="w-[30px] h-[30px] absolute right-[280px] cursor-pointer" />
-          Google
+          <img src="/GoogleLogo.png" className="w-6 h-6" /> Google
         </button>
-        <p>
-          Don't Have an account? <Link to="/signup" className="text-red-400">Sign Up</Link> from here
+
+        <p className="text-sm text-center">
+          Don't have an account?{" "}
+          <Link to="/signup" className="text-red-400 hover:text-red-300">
+            Sign Up
+          </Link>
         </p>
-        <p>
-          <Link to="/forget" className="text-red-400">Forgot Password?</Link>
+        <p className="text-sm text-center">
+          <Link to="/forget" className="text-red-400 hover:text-red-300">
+            Forgot Password?
+          </Link>
         </p>
       </div>
     </div>
