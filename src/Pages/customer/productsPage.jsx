@@ -75,7 +75,7 @@ export default function ProductsPage() {
       </section>
 
       {/* MAIN CONTENT */}
-      <div className="flex flex-1 gap-10 p-6">
+      <div className="flex flex-1 gap-10 p-6 text-red-500">
         {/* SIDEBAR FILTER */}
         <aside className="w-[320px] h-full border-r border-white/10 bg-slate-900/70 backdrop-blur-sm p-7 flex flex-col gap-10">
           <span className="block text-2xl font-extrabold text-slate-200">Filters</span>

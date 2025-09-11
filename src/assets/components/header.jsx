@@ -46,7 +46,7 @@ export default function Header() {
             onClick={() => navigate("/")}
           >
             <img
-              src="/MICROCCTVLogo.png"
+              src="c:\Users\Kavindu Rathnayaka\Desktop\KR MOTORS\FE\public\KRMOTORSLOGO.jpg"
               alt="Logo"
               className="w-[120px] h-auto object-contain"
             />
@@ -127,7 +127,7 @@ export default function Header() {
         </div>
       </header>
 
-      {/* ✅ Mobile Dropdown full width */}
+      {/*Mobile Dropdown full width */}
       {menuOpen && (
         <div className="md:hidden fixed top-[90px] left-0 w-full bg-black/95 text-white uppercase text-sm shadow-lg z-[70]">
           <div className="flex flex-col px-6 py-4 space-y-4">

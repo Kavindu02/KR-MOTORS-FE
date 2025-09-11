@@ -172,7 +172,7 @@ export default function ProductOverViewPage() {
             {/* Actions */}
             <div className="flex flex-row gap-3 mt-6">
               <button
-                className="px-4 py-2 rounded-xl shadow-lg text-white bg-red-500 border border-red-500 hover:bg-white hover:text-red-500 transition-all duration-300"
+                className="px-4 py-2 rounded-xl shadow-lg text-white bg-red-500 border border-red-500 hover:bg-red-600 hover:text-white-500 transition-all duration-300"
                 onClick={handleBuyNow}
               >
                 Buy Now
@@ -182,7 +182,7 @@ export default function ProductOverViewPage() {
                 className={`px-4 py-2 rounded-xl shadow-lg text-white border transition-all duration-300 ${
                   adding
                     ? "bg-slate-600 border-slate-600 cursor-not-allowed"
-                    : "bg-red-500 border-red-500 hover:bg-white hover:text-red-500"
+                    : "text-white bg-red-500 border border-red-500 hover:bg-red-600 hover:text-white-500"
                 }`}
                 onClick={handleAddToCart}
                 disabled={adding}
