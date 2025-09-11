@@ -15,7 +15,7 @@ export default function Header() {
 
   const token = localStorage.getItem("token");
 
-  // scroll effect only on home
+  // scroll effect only on home 
   useEffect(() => {
     if (!isHome) return;
     const handleScroll = () => setScrolled(window.scrollY > 50);
