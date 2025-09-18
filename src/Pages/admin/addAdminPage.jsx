@@ -30,7 +30,7 @@ export default function AddAdminAdminPage() {
       );
 
       toast.success("Admin Added Successfully");
-      navigate("/admin/admins");
+      navigate("/admin/add-admin  ");
     } catch (err) {
       console.error("Error adding admin:", err);
       toast.error("Failed to add admin");

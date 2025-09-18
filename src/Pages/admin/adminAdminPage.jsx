@@ -38,7 +38,6 @@ export default function AdminAdminPage() {
   }, []);
 
   const handleDelete = async (email) => {
-    if (!window.confirm("Are you sure you want to delete this admin?")) return;
 
     const token = localStorage.getItem("token");
     if (!token) {
