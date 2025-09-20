@@ -1,9 +1,16 @@
-import { FaPhone, FaEnvelope, FaCarSide, FaFacebookF, FaInstagram, FaWhatsapp, FaTiktok } from "react-icons/fa";
+import { FaPhone, FaEnvelope, FaCarSide, FaFacebookF, FaTiktok } from "react-icons/fa";
 import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
 
 export default function ContactPage() {
   return (
-    <div className="flex flex-col min-h-screen bg-slate-950 text-slate-200">
+    <motion.div
+      initial={{ opacity: 0, y: 30 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -30 }}
+      transition={{ duration: 0.6, ease: "easeOut" }}
+      className="flex flex-col min-h-screen bg-slate-950 text-slate-200"
+    >
       
       {/* CONTACT HEADER */}
       <section className="py-16 bg-slate-900/80 text-center">
@@ -105,6 +112,6 @@ export default function ContactPage() {
           © {new Date().getFullYear()} KR MOTORS. All Rights Reserved.
         </div>
       </footer>
-    </div>
+    </motion.div>
   );
 }

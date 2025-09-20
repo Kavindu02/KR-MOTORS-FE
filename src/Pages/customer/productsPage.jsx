@@ -1,7 +1,14 @@
+import { motion } from "framer-motion";
 import axios from "axios";
 import { useEffect, useMemo, useState } from "react";
 import ProductCard from "../../assets/components/productCard";
 import Loader from "../../assets/components/loader";
+
+const pageVariants = {
+  initial: { opacity: 0, y: 20 },
+  in: { opacity: 1, y: 0, transition: { duration: 0.5 } },
+  out: { opacity: 0, y: -20, transition: { duration: 0.3 } },
+};
 
 export default function ProductsPage() {
   const [products, setProducts] = useState([]);
@@ -65,7 +72,13 @@ export default function ProductsPage() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-slate-950 text-slate-200">
+    <motion.div
+      className="flex flex-col min-h-screen bg-slate-950 text-slate-200"
+      initial="initial"
+      animate="in"
+      exit="out"
+      variants={pageVariants}
+    >
       {/* HEADER */}
       <section className="bg-slate-900/80 py-16 text-center">
         <h1 className="text-4xl font-bold text-red-500 mb-4">OUR PRODUCT</h1>
@@ -153,16 +166,28 @@ export default function ProductsPage() {
           ) : filteredProducts.length === 0 ? (
             <p className="text-slate-400 text-center mt-10">No products found.</p>
           ) : (
-            <div className="grid gap-6 grid-cols-4 p-2">
+            <motion.div
+              className="grid gap-6 grid-cols-4 p-2"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5 }}
+              key={filteredProducts.length} // triggers re-animation when list changes
+            >
               {filteredProducts.map((p) => (
-                <div key={p.productId || p._id || p.id} className="p-3">
+                <motion.div
+                  key={p.productId || p._id || p.id}
+                  className="p-3"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3, delay: 0.1 }}
+                >
                   <ProductCard product={p} className="w-full h-[400px]" />
-                </div>
+                </motion.div>
               ))}
-            </div>
+            </motion.div>
           )}
         </main>
       </div>
-    </div>
+    </motion.div>
   );
 }

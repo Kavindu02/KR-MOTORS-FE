@@ -5,6 +5,7 @@ import Loader from "../../assets/components/loader";
 import axios from "axios";
 import ImageSlider from "../../assets/components/imageSlider";
 import { addToCart, getCart } from "../../utils/cart";
+import { motion } from "framer-motion";
 
 function getPid(p) {
   return p?.productId || p?._id || p?.id;
@@ -78,8 +79,23 @@ export default function ProductOverViewPage() {
     });
   }
 
+  // Animation variants
+  const pageVariants = {
+    hidden: { opacity: 0, y: 30 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } },
+    exit: { opacity: 0, y: 20, transition: { duration: 0.3 } },
+  };
+
+  const buttonTap = { scale: 0.95 };
+
   return (
-    <div className="w-full min-h-screen p-6 flex justify-center items-center bg-slate-950 text-slate-200">
+    <motion.div
+      className="w-full min-h-screen p-6 flex justify-center items-center bg-slate-950 text-slate-200"
+      initial="hidden"
+      animate="visible"
+      exit="exit"
+      variants={pageVariants}
+    >
       {status === "loading" && <Loader />}
 
       {status === "success" && product && (
@@ -89,7 +105,7 @@ export default function ProductOverViewPage() {
             <ImageSlider images={product.images || []} />
           </div>
 
-          {/* Right: Details (hight adu karapu eka) */}
+          {/* Right: Details */}
           <div className="w-full lg:w-[41%] h-fit flex flex-col items-start justify-start pl-[5px]">
             <h1 className="text-2xl font-bold text-red-500">
               {product.name}{" "}
@@ -134,14 +150,15 @@ export default function ProductOverViewPage() {
                 Quantity
               </label>
               <div className="flex items-center gap-2">
-                <button
+                <motion.button
                   type="button"
                   className="w-8 h-8 rounded-lg border border-slate-600 flex items-center justify-center text-lg hover:bg-slate-700"
                   onClick={() => setQty((q) => clampQty(q - 1))}
                   aria-label="Decrease quantity"
+                  whileTap={buttonTap}
                 >
                   –
-                </button>
+                </motion.button>
 
                 <input
                   type="number"
@@ -153,14 +170,15 @@ export default function ProductOverViewPage() {
                   className="w-16 h-8 rounded-lg border border-slate-600 text-center bg-slate-700 text-slate-200 focus:outline-none focus:ring-2 focus:ring-red-500"
                 />
 
-                <button
+                <motion.button
                   type="button"
                   className="w-8 h-8 rounded-lg border border-slate-600 flex items-center justify-center text-lg hover:bg-slate-700"
                   onClick={() => setQty((q) => clampQty(q + 1))}
                   aria-label="Increase quantity"
+                  whileTap={buttonTap}
                 >
                   +
-                </button>
+                </motion.button>
 
                 <span className="ml-3 text-xs text-slate-300">
                   Subtotal:&nbsp;
@@ -171,24 +189,26 @@ export default function ProductOverViewPage() {
 
             {/* Actions */}
             <div className="flex flex-row gap-3 mt-6">
-              <button
-                className="px-4 py-2 rounded-xl shadow-lg text-white bg-red-500 border border-red-500 hover:bg-red-600 hover:text-white-500 transition-all duration-300"
+              <motion.button
+                className="px-4 py-2 rounded-xl shadow-lg text-white bg-red-500 border border-red-500 hover:bg-red-600 transition-all duration-300"
                 onClick={handleBuyNow}
+                whileTap={buttonTap}
               >
                 Buy Now
-              </button>
+              </motion.button>
 
-              <button
+              <motion.button
                 className={`px-4 py-2 rounded-xl shadow-lg text-white border transition-all duration-300 ${
                   adding
                     ? "bg-slate-600 border-slate-600 cursor-not-allowed"
-                    : "text-white bg-red-500 border border-red-500 hover:bg-red-600 hover:text-white-500"
+                    : "text-white bg-red-500 border border-red-500 hover:bg-red-600"
                 }`}
                 onClick={handleAddToCart}
                 disabled={adding}
+                whileTap={!adding ? buttonTap : {}}
               >
                 {adding ? "Adding..." : "Add to Cart"}
-              </button>
+              </motion.button>
             </div>
           </div>
         </div>
@@ -199,6 +219,6 @@ export default function ProductOverViewPage() {
           Error loading product. Please try again later.
         </div>
       )}
-    </div>
+    </motion.div>
   );
 }

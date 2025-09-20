@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import { motion } from "framer-motion";
 
 export default function ProfilePage() {
   const [user, setUser] = useState(null);
@@ -40,61 +41,104 @@ export default function ProfilePage() {
       });
   }, [token, navigate]);
 
+  const pageVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.7, ease: "easeOut" } },
+  };
+
+  const cardHover = {
+    scale: 1.03,
+    boxShadow: "0 15px 30px rgba(239, 68, 68, 0.5)",
+  };
+
+  const infoHover = {
+    scale: 1.02,
+    backgroundColor: "#dc2626", // red-600 from Tailwind
+    color: "#fef2f2", // slate-50 for text on hover
+    transition: { duration: 0.3 },
+  };
+
   if (error)
     return (
-      <div className="flex justify-center items-center h-screen bg-slate-950 text-red-500">
+      <motion.div
+        className="flex justify-center items-center h-screen bg-slate-950 text-red-500"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.5 }}
+      >
         <p className="text-lg">{error}</p>
-      </div>
+      </motion.div>
     );
 
   if (!user)
     return (
-      <div className="flex justify-center items-center h-screen bg-slate-950 text-slate-200">
+      <motion.div
+        className="flex justify-center items-center h-screen bg-slate-950 text-slate-200"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.5 }}
+      >
         <p className="text-lg animate-pulse">Loading profile...</p>
-      </div>
+      </motion.div>
     );
 
   return (
-    <div className="min-h-screen flex justify-center items-start py-10 px-4 bg-slate-950 text-slate-200">
-      <div className="w-full max-w-md bg-slate-800 shadow-xl rounded-2xl p-10">
+    <motion.div
+      className="min-h-screen flex justify-center items-start py-10 px-4 bg-slate-950 text-slate-200"
+      initial="hidden"
+      animate="visible"
+      variants={pageVariants}
+    >
+      <motion.div
+        className="w-full max-w-md bg-slate-800 shadow-xl rounded-2xl p-10"
+        whileHover={cardHover}
+        transition={{ type: "spring", stiffness: 200, damping: 20 }}
+      >
         <div className="flex flex-col items-center">
           {user.image ? (
-            <img
+            <motion.img
               src={user.image}
               alt="Profile"
               className="w-28 h-28 rounded-full border-4 border-red-500 shadow-lg"
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.5 }}
             />
           ) : (
-            <div className="w-28 h-28 rounded-full bg-slate-700 flex items-center justify-center text-2xl font-bold text-red-500 shadow-lg">
+            <motion.div
+              className="w-28 h-28 rounded-full bg-slate-700 flex items-center justify-center text-2xl font-bold text-red-500 shadow-lg"
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.5 }}
+            >
               {user.firstName?.charAt(0) || "U"}
               {user.lastName?.charAt(0) || "U"}
-            </div>
+            </motion.div>
           )}
           <h1 className="mt-4 text-2xl font-bold text-red-500">
             {user.firstName} {user.lastName}
           </h1>
-         
         </div>
 
         <div className="mt-8 space-y-4">
-          <div className="flex items-center bg-slate-700 rounded-2xl p-4 gap-2">
-            <span className="font-semibold text-slate-300">First Name :</span>
-            <span className="text-slate-200">{user.firstName || "Not Provided"}</span>
-          </div>
-          <div className="flex items-center bg-slate-700 rounded-2xl p-4 gap-2">
-            <span className="font-semibold text-slate-300">Last Name : </span>
-            <span className="text-slate-200">{user.lastName || "Not Provided"}</span>
-          </div>
-          <div className="flex items-center bg-slate-700 rounded-2xl p-4 gap-2">
-            <span className="font-semibold text-slate-300">Email : </span>
-            <span className="text-slate-200">{user.email || "Not Provided"}</span>
-          </div>
-          <div className="flex items-center bg-slate-700 rounded-2xl p-4 gap-2">
-            <span className="font-semibold text-slate-300">Phone : </span>
-            <span className="text-slate-200">{user.phone || "Not Provided"}</span>
-          </div>
+          {[
+            { label: "First Name", value: user.firstName },
+            { label: "Last Name", value: user.lastName },
+            { label: "Email", value: user.email },
+            { label: "Phone", value: user.phone },
+          ].map(({ label, value }) => (
+            <motion.div
+              key={label}
+              className="flex items-center bg-slate-700 rounded-2xl p-4 gap-2 cursor-default"
+              whileHover={infoHover}
+              transition={{ type: "tween" }}
+            >
+              <span className="font-semibold text-slate-300">{label} :</span>
+              <span>{value || "Not Provided"}</span>
+            </motion.div>
+          ))}
         </div>
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 }

@@ -1,9 +1,9 @@
-// src/pages/checkout/CheckoutPage.jsx
 import { useEffect, useState } from "react";
 import { RiDeleteBin5Fill } from "react-icons/ri";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import toast from "react-hot-toast";
+import { motion } from "framer-motion";
 
 export default function CheckoutPage() {
   const location = useLocation();
@@ -37,10 +37,12 @@ export default function CheckoutPage() {
 
   const [cart, setCart] = useState(location.state?.items || []);
 
-  if (!location.state?.items) {
-    toast.error("Please select items to checkout");
-    navigate("/shop");
-  }
+  useEffect(() => {
+    if (!location.state?.items) {
+      toast.error("Please select items to checkout");
+      navigate("/shop");
+    }
+  }, [location.state, navigate]);
 
   function getTotal() {
     return cart.reduce((total, item) => total + item.price * item.quantity, 0);
@@ -78,12 +80,31 @@ export default function CheckoutPage() {
     }
   }
 
+  const pageVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } },
+  };
+
+  const itemVariants = {
+    hover: { y: -5, boxShadow: "0px 8px 15px rgba(255, 0, 0, 0.3)" },
+  };
+
+  const buttonTap = { scale: 0.95 };
+
   return (
-    <div className="w-full min-h-screen flex flex-col py-10 items-center bg-slate-950 text-slate-200">
+    <motion.div
+      className="w-full min-h-screen flex flex-col py-10 items-center bg-slate-950 text-slate-200"
+      initial="hidden"
+      animate="visible"
+      variants={pageVariants}
+    >
       {cart.map((item, index) => (
-        <div
+        <motion.div
           key={item.productId}
-          className="w-[900px] h-[150px] m-[10px] shadow-xl flex flex-row items-center transition-transform hover:-translate-y-1 duration-200 bg-slate-800 rounded-xl"
+          className="w-[900px] h-[150px] m-[10px] shadow-xl flex flex-row items-center bg-slate-800 rounded-xl"
+          variants={itemVariants}
+          whileHover="hover"
+          transition={{ type: "spring", stiffness: 300, damping: 20 }}
         >
           <img
             src={item.image}
@@ -97,7 +118,7 @@ export default function CheckoutPage() {
             </span>
           </div>
           <div className="w-[190px] h-full flex flex-row justify-center items-center">
-            <button
+            <motion.button
               className="cursor-pointer text-3xl px-3 hover:text-red-500"
               onClick={() => {
                 const newCart = [...cart];
@@ -106,56 +127,60 @@ export default function CheckoutPage() {
                   setCart(newCart);
                 }
               }}
+              whileTap={buttonTap}
+              disabled={item.quantity <= 1}
             >
               -
-            </button>
+            </motion.button>
             <span className="mx-[10px] text-xl">{item.quantity}</span>
-            <button
+            <motion.button
               className="cursor-pointer text-xl px-3 hover:text-red-500"
               onClick={() => {
                 const newCart = [...cart];
                 newCart[index].quantity += 1;
                 setCart(newCart);
               }}
+              whileTap={buttonTap}
             >
               +
-            </button>
+            </motion.button>
           </div>
           <div className="w-[190px] h-full flex justify-end items-center pr-[20px]">
             <span className="font-bold text-red-500">
               Rs {(item.price * item.quantity).toFixed(2)}
             </span>
           </div>
-          <button
+          <motion.button
             className="w-[30px] h-[30px] bg-red-500 text-white font-bold hover:bg-red-600 cursor-pointer rounded-full mr-[20px] flex items-center justify-center"
             onClick={() => {
               const newCart = [...cart];
               newCart.splice(index, 1);
               setCart(newCart);
             }}
+            whileTap={buttonTap}
           >
             <RiDeleteBin5Fill />
-          </button>
-        </div>
+          </motion.button>
+        </motion.div>
       ))}
 
       <div className="w-[900px] h-[100px] m-[10px] shadow-xl flex flex-row items-center justify-center relative bg-slate-800 rounded-xl">
         <input
-          className="w-[200px] h-[40px] bg-slate-700 text-slate-200 border border-slate-600 rounded-lg p-[10px] mr-[10px]"
+          className="w-[200px] h-[40px] bg-slate-700 text-slate-200 border border-slate-600 rounded-lg p-[10px] mr-[10px] focus:outline-none focus:ring-2 focus:ring-red-500 transition"
           type="text"
           placeholder="Enter Your Name"
           value={name || ""}
           onChange={(e) => setName(e.target.value)}
         />
         <input
-          className="w-[400px] h-[40px] bg-slate-700 text-slate-200 border border-slate-600 rounded-lg p-[10px] mr-[10px]"
+          className="w-[400px] h-[40px] bg-slate-700 text-slate-200 border border-slate-600 rounded-lg p-[10px] mr-[10px] focus:outline-none focus:ring-2 focus:ring-red-500 transition"
           type="text"
           placeholder="Enter Your Address"
           value={address}
           onChange={(e) => setAddress(e.target.value)}
         />
         <input
-          className="w-[200px] h-[40px] bg-slate-700 text-slate-200 border border-slate-600 rounded-lg p-[10px] mr-[10px]"
+          className="w-[200px] h-[40px] bg-slate-700 text-slate-200 border border-slate-600 rounded-lg p-[10px] mr-[10px] focus:outline-none focus:ring-2 focus:ring-red-500 transition"
           type="text"
           placeholder="Enter Your Phone Number"
           value={phone}
@@ -163,17 +188,23 @@ export default function CheckoutPage() {
         />
       </div>
 
-      <div className="w-[900px] h-[100px] m-[10px] shadow-xl flex flex-row items-center justify-end relative bg-slate-800 rounded-xl">
+      <motion.div
+        className="w-[900px] h-[100px] m-[10px] shadow-xl flex flex-row items-center justify-end relative bg-slate-800 rounded-xl"
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+      >
         <span className="font-bold text-xl text-red-500 mr-[20px]">
           Total: Rs {getTotal().toFixed(2)}
         </span>
-        <button
+        <motion.button
           className="absolute left-10 bg-red-500 text-white px-5 py-2 rounded-full font-semibold hover:bg-red-600 cursor-pointer transition"
           onClick={placeOrder}
+          whileTap={buttonTap}
         >
           Place Order
-        </button>
-      </div>
-    </div>
+        </motion.button>
+      </motion.div>
+    </motion.div>
   );
 }
