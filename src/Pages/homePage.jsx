@@ -1,8 +1,7 @@
 import { Link } from "react-router-dom";
-import { motion } from "framer-motion"; // <-- Animate කරන්න use වෙනවා
+import { motion } from "framer-motion";
 import { FaCarSide, FaFacebookF, FaTiktok } from "react-icons/fa";
 
-// Slide animation එකට use වෙන animation variant එක
 const slideIn = {
   hidden: { opacity: 0, x: -50 },
   show: { opacity: 1, x: 0, transition: { duration: 0.5 } },
@@ -10,7 +9,6 @@ const slideIn = {
 
 export default function HomePage() {
   return (
-    // motion.div එකක් wrap කරලා තියෙනවා animation එකට
     <motion.div
       className="flex flex-col min-h-screen bg-slate-900 text-slate-100"
       initial="hidden"
@@ -87,7 +85,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* FOOTER — එකත්ම 그대로 තියාගෙන යනවා */}
+     
       <footer className="bg-slate-900 text-slate-300">
         <div className="max-w-6xl mx-auto px-6 py-12 grid md:grid-cols-4 gap-10">
           <div>

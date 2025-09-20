@@ -89,6 +89,7 @@ export default function ProductsPage() {
 
       {/* MAIN CONTENT */}
       <div className="flex flex-1 gap-10 p-6 text-red-500">
+        
         {/* SIDEBAR FILTER */}
         <aside className="w-[320px] h-full border-r border-white/10 bg-slate-900/70 backdrop-blur-sm p-7 flex flex-col gap-10">
           <span className="block text-2xl font-extrabold text-slate-200">Filters</span>
@@ -156,7 +157,10 @@ export default function ProductsPage() {
         </aside>
 
         {/* PRODUCTS GRID */}
-        <main className="flex-1 h-full overflow-y-auto">
+        <main
+          className="flex-1 h-full overflow-y-auto [&::-webkit-scrollbar]:hidden"
+          style={{ scrollbarWidth: "none" }} // Firefox support
+        >
           {status === "loading" ? (
             <div className="flex justify-center items-center h-full">
               <Loader />
@@ -180,6 +184,7 @@ export default function ProductsPage() {
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.3, delay: 0.1 }}
+                  whileHover={{ scale: 1.05, y: -5, boxShadow: "0px 8px 20px rgba(0,0,0,0.4)" }} // Hover effect
                 >
                   <ProductCard product={p} className="w-full h-[400px]" />
                 </motion.div>

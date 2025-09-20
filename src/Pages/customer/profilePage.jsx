@@ -33,7 +33,8 @@ export default function ProfilePage() {
         setError(null);
       })
       .catch((err) => {
-        const errorMessage = err.response?.data?.message || "Failed to load profile";
+        const errorMessage =
+          err.response?.data?.message || "Failed to load profile";
         setError(errorMessage);
         toast.error(errorMessage);
         localStorage.removeItem("token");
@@ -43,18 +44,19 @@ export default function ProfilePage() {
 
   const pageVariants = {
     hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.7, ease: "easeOut" } },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.7, ease: "easeOut" },
+    },
   };
-
   const cardHover = {
     scale: 1.03,
-    boxShadow: "0 15px 30px rgba(239, 68, 68, 0.5)",
   };
 
+  // 🔹 Modified: no red background on hover
   const infoHover = {
     scale: 1.02,
-    backgroundColor: "#dc2626", // red-600 from Tailwind
-    color: "#fef2f2", // slate-50 for text on hover
     transition: { duration: 0.3 },
   };
 
