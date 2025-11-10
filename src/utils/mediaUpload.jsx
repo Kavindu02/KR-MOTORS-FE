@@ -13,15 +13,15 @@ export default function mediaUpload(file) {
 
 		const timestamp = new Date().getTime();
 		const fileName = timestamp + file.name;
-
+		
 		supabase.storage
-			.from("images")
+			.from("krr")
 			.upload(fileName, file, {
 				cacheControl: "3600",
 				upsert: false,
 			})
 			.then(() => {
-				const publicUrl = supabase.storage.from("images").getPublicUrl(fileName)
+				const publicUrl = supabase.storage.from("krr").getPublicUrl(fileName)
 					.data.publicUrl;
 				resolve(publicUrl);
 			}).catch(()=>{
