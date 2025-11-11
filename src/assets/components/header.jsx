@@ -39,16 +39,16 @@ export default function Header() {
       <header
         className={`fixed top-0 left-0 w-full z-[60] transition-all duration-300 ${headerBgClass} text-white`}
       >
-        <div className="max-w-6xl mx-auto flex items-center justify-between h-[90px] px-6 relative">
+        <div className="max-w-7xl mx-auto flex items-center justify-between h-[90px] px-6 relative">
           {/* Logo Left */}
           <div
             className="flex items-center gap-2 font-bold tracking-wide text-lg cursor-pointer"
             onClick={() => navigate("/")}
           >
             <img
-              src="c:\Users\Kavindu Rathnayaka\Desktop\KR MOTORS\FE\public\KRMOTORSLOGO.jpg"
+              src="/public/krmotorslogo.png"
               alt="Logo"
-              className="w-[120px] h-auto object-contain"
+              className="w-[60px] h-auto object-contain"
             />
           </div>
 
