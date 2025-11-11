@@ -9,6 +9,7 @@ import ClientWebPage from './Pages/customer/customerPage';
 import HomePage from './Pages/homePage';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import ForgetPasswordPage from './Pages/customer/forgetPassword';
+import ProductOverView from "./Pages/customer/productOverView";
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
             <Route path="/signup" element={<RegisterPage />} />
             <Route path="/admin/*" element={<AdminPage />} />
             <Route path="/test" element={<TestPage />} />
+            <Route path="/product/:id" element={<ProductOverView />} /> {/* ✅ Add here */}
             <Route path="/*" element={<ClientWebPage />} />
             <Route path="/home" element={<HomePage />} />
             <Route path="/forget" element={<ForgetPasswordPage />} />

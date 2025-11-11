@@ -46,7 +46,7 @@ export default function Header() {
             onClick={() => navigate("/")}
           >
             <img
-              src="/public/krmotorslogo.png"
+              src="/krmotorslogo.png"
               alt="Logo"
               className="w-[60px] h-auto object-contain"
             />
