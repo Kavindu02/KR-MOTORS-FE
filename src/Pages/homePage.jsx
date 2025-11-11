@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
+import { useEffect } from "react";
 import { FaCarSide, FaFacebookF, FaTiktok, FaShippingFast, FaShieldAlt, FaHeadset } from "react-icons/fa";
 
 const slideIn = {
@@ -36,6 +37,10 @@ const scaleIn = {
 };
 
 export default function HomePage() {
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  }, []);
+
   const features = [
     {
       icon: <FaShieldAlt className="w-12 h-12 text-red-500" />,
@@ -67,9 +72,10 @@ export default function HomePage() {
         {/* Background Image with Overlay */}
         <div className="absolute inset-0">
           <motion.img
-            src="https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=1920&q=80"
+            src="https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=1200&q=70&auto=format"
             alt="Car"
             className="w-full h-full object-cover"
+            loading="eager"
             initial={{ scale: 1.2 }}
             animate={{ scale: 1 }}
             transition={{ duration: 10, repeat: Infinity, repeatType: "reverse" }}
@@ -239,9 +245,10 @@ export default function HomePage() {
       {/* CTA SECTION */}
       <section className="relative py-24 overflow-hidden">
         <motion.img
-          src="https://images.unsplash.com/photo-1580273916550-e323be2ae537?w=1920&q=80"
+          src="https://images.unsplash.com/photo-1580273916550-e323be2ae537?w=1200&q=70"
           alt="Workshop"
           className="absolute inset-0 w-full h-full object-cover"
+          loading="lazy"
           initial={{ scale: 1 }}
           animate={{ scale: 1.05 }}
           transition={{ duration: 20, repeat: Infinity, repeatType: "reverse" }}
@@ -276,17 +283,46 @@ export default function HomePage() {
       </section>
 
       {/* FOOTER */}
-      <footer className="bg-slate-950 text-slate-300 relative">
-        <div className="max-w-6xl mx-auto px-6 py-12 grid md:grid-cols-4 gap-10">
+      <footer className="bg-slate-950 text-slate-300 relative overflow-hidden">
+        {/* Animated background */}
+        <div className="absolute inset-0 opacity-10">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            className="absolute inset-0"
+            style={{
+              backgroundImage: "linear-gradient(45deg, #ef4444 25%, transparent 25%, transparent 75%, #ef4444 75%, #ef4444), linear-gradient(45deg, #ef4444 25%, transparent 25%, transparent 75%, #ef4444 75%, #ef4444)",
+              backgroundSize: "60px 60px",
+              backgroundPosition: "0 0, 30px 30px"
+            }}
+            animate={{
+              backgroundPosition: ["0px 0px, 30px 30px", "60px 60px, 90px 90px"],
+            }}
+            transition={{
+              duration: 20,
+              repeat: Infinity,
+              ease: "linear"
+            }}
+          />
+        </div>
+
+        <div className="max-w-6xl mx-auto px-6 py-12 grid md:grid-cols-4 gap-10 relative z-10">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
           >
-            <div className="flex items-center gap-2 font-bold text-white text-xl mb-4">
-              <FaCarSide className="w-8 h-8 text-red-500" /> KR MOTORS
-            </div>
+            <motion.div 
+              className="flex items-center gap-2 font-bold text-white text-xl mb-4"
+              whileHover={{ scale: 1.05 }}
+            >
+              <motion.div
+                animate={{ rotate: [0, 10, -10, 0] }}
+                transition={{ duration: 2, repeat: Infinity, repeatDelay: 3 }}
+              >
+                <FaCarSide className="w-8 h-8 text-red-500" />
+              </motion.div>
+              KR MOTORS
+            </motion.div>
             <p className="text-sm opacity-80 leading-relaxed">
               We provide genuine vehicle parts and accessories, affordable prices,
               and trusted service with islandwide delivery.
@@ -294,44 +330,82 @@ export default function HomePage() {
           </motion.div>
 
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.1 }}
           >
             <h4 className="text-white font-semibold text-lg mb-4">Quick Links</h4>
             <ul className="space-y-2 text-sm">
-              <li><Link to="/" className="hover:text-red-500 transition duration-300 inline-block hover:translate-x-1">HOME</Link></li>
-              <li><Link to="/shop" className="hover:text-red-500 transition duration-300 inline-block hover:translate-x-1">SHOP</Link></li>
-              <li><Link to="/about" className="hover:text-red-500 transition duration-300 inline-block hover:translate-x-1">ABOUT</Link></li>
-              <li><Link to="/contact" className="hover:text-red-500 transition duration-300 inline-block hover:translate-x-1">CONTACT</Link></li>
+              {[
+                { name: "HOME", path: "/" },
+                { name: "SHOP", path: "/shop" },
+                { name: "ABOUT", path: "/about" },
+                { name: "CONTACT", path: "/contact" }
+              ].map((link, i) => (
+                <motion.li 
+                  key={link.name}
+                  initial={{ opacity: 0, x: -20 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: 0.1 + i * 0.05 }}
+                >
+                  <Link to={link.path} className="hover:text-red-500 transition duration-300 inline-block hover:translate-x-2">
+                    {link.name}
+                  </Link>
+                </motion.li>
+              ))}
             </ul>
           </motion.div>
 
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.2 }}
           >
             <h4 className="text-white font-semibold text-lg mb-4">Services</h4>
             <ul className="space-y-2 text-sm">
-              <li className="flex items-center gap-2"><span className="text-red-500">•</span> Genuine Auto Parts</li>
-              <li className="flex items-center gap-2"><span className="text-red-500">•</span> Islandwide Delivery</li>
-              <li className="flex items-center gap-2"><span className="text-red-500">•</span> Warranty & Returns</li>
+              {[
+                "Genuine Auto Parts",
+                "Islandwide Delivery",
+                "Warranty & Returns"
+              ].map((service, i) => (
+                <motion.li 
+                  key={service}
+                  className="flex items-center gap-2"
+                  initial={{ opacity: 0, x: -20 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: 0.1 + i * 0.05 }}
+                >
+                  <motion.span 
+                    className="text-red-500"
+                    animate={{ scale: [1, 1.3, 1] }}
+                    transition={{ duration: 2, repeat: Infinity, delay: i * 0.3 }}
+                  >
+                    •
+                  </motion.span>
+                  {service}
+                </motion.li>
+              ))}
             </ul>
           </motion.div>
 
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.3 }}
           >
             <h4 className="text-white font-semibold text-lg mb-4">Contact Us</h4>
             <ul className="space-y-2 text-sm mb-4">
-              <li><a href="tel:+94704150080" className="hover:text-red-500 transition duration-300">+94 704150080</a></li>
-              <li><a href="mailto:krmotorssl@gmail.com" className="hover:text-red-500 transition duration-300">krmotorssl@gmail.com</a></li>
+              <motion.li whileHover={{ x: 5 }} transition={{ duration: 0.2 }}>
+                <a href="tel:+94704150080" className="hover:text-red-500 transition duration-300">+94 704150080</a>
+              </motion.li>
+              <motion.li whileHover={{ x: 5 }} transition={{ duration: 0.2 }}>
+                <a href="mailto:krmotorssl@gmail.com" className="hover:text-red-500 transition duration-300">krmotorssl@gmail.com</a>
+              </motion.li>
             </ul>
             <div className="flex gap-3 text-white">
               <motion.a
@@ -339,8 +413,9 @@ export default function HomePage() {
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-10 h-10 bg-slate-800 rounded-full flex items-center justify-center hover:bg-red-500 transition duration-300"
-                whileHover={{ scale: 1.2, rotate: 5 }}
+                whileHover={{ scale: 1.2, rotate: 360 }}
                 whileTap={{ scale: 0.9 }}
+                transition={{ duration: 0.4 }}
               >
                 <FaFacebookF />
               </motion.a>
@@ -349,8 +424,9 @@ export default function HomePage() {
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-10 h-10 bg-slate-800 rounded-full flex items-center justify-center hover:bg-red-500 transition duration-300"
-                whileHover={{ scale: 1.2, rotate: -5 }}
+                whileHover={{ scale: 1.2, rotate: -360 }}
                 whileTap={{ scale: 0.9 }}
+                transition={{ duration: 0.4 }}
               >
                 <FaTiktok />
               </motion.a>
@@ -358,15 +434,15 @@ export default function HomePage() {
           </motion.div>
         </div>
 
-        <div className="text-center text-xs py-6 border-t border-white/10">
-          <motion.p
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-          >
-            © {new Date().getFullYear()} KR MOTORS. All Rights Reserved.
-          </motion.p>
-        </div>
+        <motion.div 
+          className="text-center text-xs py-6 border-t border-white/10 relative z-10"
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.5 }}
+        >
+          <p>© {new Date().getFullYear()} KR MOTORS. All Rights Reserved.</p>
+        </motion.div>
       </footer>
     </motion.div>
   );
