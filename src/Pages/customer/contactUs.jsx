@@ -15,7 +15,7 @@ export default function ContactPage() {
       icon: <FaPhone className="w-8 h-8" />,
       title: "Call Us",
       detail: "+94 704150080",
-      subtext: "Mon-Sat, 9AM-6PM",
+      subtext: "Mon-Sun, 8AM-9PM",
       link: "tel:+94704150080"
     },
     {
@@ -255,7 +255,7 @@ export default function ContactPage() {
                   </motion.div>
                   <div>
                     <h4 className="text-white font-semibold mb-1">Business Hours</h4>
-                    <p className="text-slate-300 text-sm">Monday - Saturday: 9:00 AM - 6:00 PM</p>
+                    <p className="text-slate-300 text-sm">Monday - Sunday: 8:00 AM - 9:00 PM</p>
                     <p className="text-slate-400 text-sm">Sunday: Closed</p>
                   </div>
                 </motion.div>
