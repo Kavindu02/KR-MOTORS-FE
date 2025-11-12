@@ -145,7 +145,7 @@ export default function CartPage() {
         >
           Checkout
         </motion.button>
-      </motion.div>
+      </motion.div> 
     </motion.div>
   );
 }
