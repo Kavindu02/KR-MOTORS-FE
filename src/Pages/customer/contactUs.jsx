@@ -365,61 +365,6 @@ export default function ContactPage() {
         </div>
       </section>
 
-      {/* CTA SECTION */}
-      <section className="relative py-24 overflow-hidden">
-        <motion.img
-          src="https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?w=1200&q=70"
-          alt="Auto Parts"
-          className="absolute inset-0 w-full h-full object-cover"
-          initial={{ scale: 1.1 }}
-          animate={{ scale: 1 }}
-          transition={{ duration: 10, repeat: Infinity, repeatType: "reverse" }}
-        />
-        <div className="absolute inset-0 bg-gradient-to-r from-slate-900/95 to-slate-900/85"></div>
-        
-        <motion.div
-          className="relative max-w-4xl mx-auto px-6 text-center"
-          initial={{ opacity: 0, y: 40 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.7 }}
-        >
-          <motion.h2 
-            className="text-4xl md:text-5xl font-bold text-white mb-6"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.2, duration: 0.6 }}
-          >
-            Need Quality Auto Parts?
-          </motion.h2>
-          <motion.p 
-            className="text-xl text-slate-300 mb-8"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.3, duration: 0.6 }}
-          >
-            Browse our collection or contact us for expert recommendations
-          </motion.p>
-          <motion.button
-            className="px-12 py-4 bg-white text-slate-900 font-bold rounded-full shadow-xl hover:bg-red-500 hover:text-white transition-all duration-300"
-            initial={{ opacity: 0, scale: 0.8 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.4, duration: 0.5, type: "spring", stiffness: 200 }}
-            whileHover={{ 
-              scale: 1.08, 
-              boxShadow: "0 10px 40px rgba(255, 255, 255, 0.3)",
-              transition: { duration: 0.3 }
-            }}
-            whileTap={{ scale: 0.95 }}
-          >
-            Explore Products
-          </motion.button>
-        </motion.div>
-      </section>
-
       {/* FOOTER */}
       <footer className="bg-slate-950 text-slate-300 relative overflow-hidden">
         {/* Animated background */}
