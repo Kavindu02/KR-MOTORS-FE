@@ -64,7 +64,7 @@ export default function CartPage() {
         {/* Background Image with Overlay */}
         <div className="absolute inset-0">
           <motion.img
-            src="https://images.unsplash.com/photo-1617817236914-795f5a551eb4?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8Y2FydHN8ZW58MHx8MHx8fDA%3D"
+            src="cartpagehero.avif"
             alt="Cart Background"
             className="w-full h-full object-cover"
             loading="eager"

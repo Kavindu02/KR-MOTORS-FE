@@ -45,19 +45,19 @@ export default function ContactPage() {
       <section className="relative bg-slate-950 overflow-hidden">
         <div className="absolute inset-0">
           <motion.img
-            src="https://images.unsplash.com/photo-1423666639041-f56000c27a9a?w=1200&q=70&auto=format"
+            src="contactpagehero.jpg"
             alt="Contact"
             className="w-full h-full object-cover"
             loading="eager"
-            initial={{ scale: 1.1 }}
+            initial={{ scale: 1.2 }}
             animate={{ scale: 1 }}
-            transition={{ duration: 1.5, ease: "easeOut" }}
+            transition={{ duration: 10, repeat: Infinity, repeatType: "reverse" }}
           />
           <div className="absolute inset-0 bg-gradient-to-br from-slate-900/95 via-slate-900/90 to-red-900/50"></div>
           
           {/* Floating particles */}
           <div className="absolute inset-0">
-            {[...Array(8)].map((_, i) => (
+            {[...Array(15)].map((_, i) => (
               <motion.div
                 key={i}
                 className="absolute w-1 h-1 sm:w-2 sm:h-2 bg-red-500/40 rounded-full"

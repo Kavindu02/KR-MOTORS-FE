@@ -72,7 +72,7 @@ export default function HomePage() {
         {/* Background Image with Overlay */}
         <div className="absolute inset-0">
           <motion.img
-            src="https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=1200&q=70&auto=format"
+            src="homepagehero.avif"
             alt="Car"
             className="w-full h-full object-cover"
             loading="eager"
@@ -245,7 +245,7 @@ export default function HomePage() {
       {/* CTA SECTION */}
       <section className="relative py-16 sm:py-20 md:py-24 overflow-hidden">
         <motion.img
-          src="https://images.unsplash.com/photo-1580273916550-e323be2ae537?w=1200&q=70"
+          src="homepage2.png"
           alt="Workshop"
           className="absolute inset-0 w-full h-full object-cover"
           loading="lazy"

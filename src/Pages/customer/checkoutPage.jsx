@@ -127,7 +127,7 @@ export default function CheckoutPage() {
       <section className="relative bg-slate-950 overflow-hidden">
         <div className="absolute inset-0">
           <motion.img
-            src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=600&auto=format&fit=crop&q=60"
+            src="checkoutpagehero.jpg"
             alt="Checkout Background"
             className="w-full h-full object-cover"
             loading="eager"
