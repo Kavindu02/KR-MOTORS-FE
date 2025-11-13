@@ -12,21 +12,21 @@ export default function ContactPage() {
 
   const contactMethods = [
     {
-      icon: <FaPhone className="w-8 h-8" />,
+      icon: <FaPhone className="w-6 h-6 sm:w-8 sm:h-8" />,
       title: "Call Us",
       detail: "+94 704150080",
       subtext: "Mon-Sun, 8AM-9PM",
       link: "tel:+94704150080"
     },
     {
-      icon: <FaEnvelope className="w-8 h-8" />,
+      icon: <FaEnvelope className="w-6 h-6 sm:w-8 sm:h-8" />,
       title: "Email Us",
       detail: "krmotorssl@gmail.com",
       subtext: "We'll respond within 24hrs",
       link: "mailto:krmotorssl@gmail.com"
     },
     {
-      icon: <FaMapMarkerAlt className="w-8 h-8" />,
+      icon: <FaMapMarkerAlt className="w-6 h-6 sm:w-8 sm:h-8" />,
       title: "Visit Us",
       detail: "Alawwa, Sri Lanka",
       subtext: "View on Google Maps",
@@ -60,7 +60,7 @@ export default function ContactPage() {
             {[...Array(8)].map((_, i) => (
               <motion.div
                 key={i}
-                className="absolute w-2 h-2 bg-red-500/40 rounded-full"
+                className="absolute w-1 h-1 sm:w-2 sm:h-2 bg-red-500/40 rounded-full"
                 style={{
                   left: `${Math.random() * 100}%`,
                   top: `${Math.random() * 100}%`,
@@ -80,14 +80,14 @@ export default function ContactPage() {
           </div>
         </div>
 
-        <div className="relative max-w-6xl mx-auto px-6 py-32 text-center z-10">
+        <div className="relative max-w-6xl mx-auto px-4 sm:px-6 py-20 sm:py-28 md:py-32 text-center z-10">
           <motion.div
             initial={{ opacity: 0, y: -30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, ease: "easeOut", delay: 0.2 }}
           >
             <motion.h1
-              className="text-5xl md:text-6xl font-extrabold mb-6 text-white tracking-wide"
+              className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold mb-4 sm:mb-6 text-white tracking-wide px-2"
               animate={{ 
                 textShadow: [
                   "0 0 20px rgba(239, 68, 68, 0.3)",
@@ -102,7 +102,7 @@ export default function ContactPage() {
           </motion.div>
 
           <motion.p
-            className="text-lg md:text-xl text-slate-200 mb-4 leading-relaxed font-light max-w-3xl mx-auto"
+            className="text-base sm:text-lg md:text-xl text-slate-200 mb-3 sm:mb-4 leading-relaxed font-light max-w-3xl mx-auto px-4"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4, duration: 0.6 }}
@@ -110,7 +110,7 @@ export default function ContactPage() {
             Get in touch for genuine vehicle parts, inquiries, or orders
           </motion.p>
           <motion.p
-            className="text-lg md:text-xl text-red-400 font-semibold"
+            className="text-base sm:text-lg md:text-xl text-red-400 font-semibold px-4"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5, duration: 0.6 }}
@@ -121,7 +121,7 @@ export default function ContactPage() {
       </section>
 
       {/* CONTACT METHODS */}
-      <section className="py-24 bg-gradient-to-b from-slate-900 to-slate-800 relative overflow-hidden">
+      <section className="py-12 sm:py-16 md:py-20 lg:py-24 bg-gradient-to-b from-slate-900 to-slate-800 relative overflow-hidden">
         {/* Background pattern */}
         <div className="absolute inset-0 opacity-5">
           <motion.div 
@@ -142,14 +142,14 @@ export default function ContactPage() {
         </div>
 
         <motion.div
-          className="relative max-w-6xl mx-auto px-6"
+          className="relative max-w-6xl mx-auto px-4 sm:px-6"
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true, margin: "-100px" }}
           transition={{ duration: 0.6 }}
         >
           <motion.h2
-            className="text-4xl md:text-5xl font-bold text-center mb-16 text-white"
+            className="text-3xl sm:text-4xl md:text-5xl font-bold text-center mb-10 sm:mb-12 md:mb-16 text-white px-2"
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -158,12 +158,12 @@ export default function ContactPage() {
             Get In <span className="text-red-500">Touch</span>
           </motion.h2>
 
-          <div className="grid md:grid-cols-3 gap-8 mb-16">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 mb-12 sm:mb-16">
             {contactMethods.map((method, i) => (
               <motion.a
                 key={i}
                 href={method.link}
-                className="relative p-8 bg-gradient-to-br from-slate-800 to-slate-900 shadow-2xl rounded-3xl overflow-hidden group block"
+                className="relative p-6 sm:p-8 bg-gradient-to-br from-slate-800 to-slate-900 shadow-2xl rounded-2xl sm:rounded-3xl overflow-hidden group block"
                 initial={{ opacity: 0, y: 50, scale: 0.9 }}
                 whileInView={{ opacity: 1, y: 0, scale: 1 }}
                 viewport={{ once: true, margin: "-50px" }}
@@ -175,14 +175,14 @@ export default function ContactPage() {
                 transition={{ delay: i * 0.15, duration: 0.5, type: "spring", stiffness: 100 }}
               >
                 {/* Hover border effect */}
-                <div className="absolute inset-0 bg-gradient-to-r from-red-500 via-red-600 to-red-700 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-3xl" 
+                <div className="absolute inset-0 bg-gradient-to-r from-red-500 via-red-600 to-red-700 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl sm:rounded-3xl" 
                      style={{ padding: "2px" }}>
-                  <div className="w-full h-full bg-gradient-to-br from-slate-800 to-slate-900 rounded-3xl"></div>
+                  <div className="w-full h-full bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl sm:rounded-3xl"></div>
                 </div>
 
                 <div className="relative z-10 text-center">
                   <motion.div
-                    className="mb-6 inline-flex items-center justify-center w-16 h-16 bg-red-500/20 rounded-full text-red-500"
+                    className="mb-4 sm:mb-6 inline-flex items-center justify-center w-12 h-12 sm:w-16 sm:h-16 bg-red-500/20 rounded-full text-red-500"
                     whileHover={{ 
                       rotate: [0, -10, 10, -10, 0],
                       scale: 1.2,
@@ -191,9 +191,9 @@ export default function ContactPage() {
                   >
                     {method.icon}
                   </motion.div>
-                  <h3 className="text-xl font-bold text-white mb-2 group-hover:text-red-400 transition-colors duration-300">{method.title}</h3>
-                  <p className="text-slate-200 font-medium mb-1">{method.detail}</p>
-                  <p className="text-slate-400 text-sm">{method.subtext}</p>
+                  <h3 className="text-lg sm:text-xl font-bold text-white mb-2 group-hover:text-red-400 transition-colors duration-300">{method.title}</h3>
+                  <p className="text-sm sm:text-base text-slate-200 font-medium mb-1 break-words">{method.detail}</p>
+                  <p className="text-xs sm:text-sm text-slate-400">{method.subtext}</p>
                 </div>
 
                 {/* Shine effect */}
@@ -210,13 +210,13 @@ export default function ContactPage() {
       </section>
 
       {/* MAP & INFO SECTION */}
-      <section className="py-24 bg-slate-900 relative" id="map">
-        <div className="max-w-6xl mx-auto px-6">
-          <div className="grid md:grid-cols-2 gap-12 items-center">
+      <section className="py-12 sm:py-16 md:py-20 lg:py-24 bg-slate-900 relative" id="map">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6">
+          <div className="grid lg:grid-cols-2 gap-8 sm:gap-10 lg:gap-12 items-center">
             
             {/* Info Card */}
             <motion.div
-              className="space-y-8"
+              className="space-y-6 sm:space-y-8 order-2 lg:order-1"
               initial={{ opacity: 0, x: -50 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true, margin: "-100px" }}
@@ -228,18 +228,18 @@ export default function ContactPage() {
                 viewport={{ once: true }}
                 transition={{ delay: 0.2, duration: 0.6 }}
               >
-                <h2 className="text-4xl font-bold text-white mb-4">
+                <h2 className="text-3xl sm:text-4xl font-bold text-white mb-3 sm:mb-4">
                   Visit Our <span className="text-red-500">Store</span>
                 </h2>
-                <p className="text-slate-300 leading-relaxed">
+                <p className="text-sm sm:text-base text-slate-300 leading-relaxed">
                   Drop by our location for expert advice, quality parts inspection, and personalized service. 
                   Our friendly team is ready to help you find exactly what you need.
                 </p>
               </motion.div>
 
-              <div className="space-y-6">
+              <div className="space-y-4 sm:space-y-6">
                 <motion.div 
-                  className="flex items-start gap-4 p-6 bg-slate-800 rounded-2xl hover:bg-slate-700/70 transition-all duration-300"
+                  className="flex items-start gap-3 sm:gap-4 p-4 sm:p-6 bg-slate-800 rounded-xl sm:rounded-2xl hover:bg-slate-700/70 transition-all duration-300"
                   initial={{ opacity: 0, x: -30 }}
                   whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true }}
@@ -247,21 +247,21 @@ export default function ContactPage() {
                   whileHover={{ x: 10, transition: { duration: 0.3 } }}
                 >
                   <motion.div 
-                    className="w-12 h-12 bg-red-500/20 rounded-full flex items-center justify-center flex-shrink-0"
+                    className="w-10 h-10 sm:w-12 sm:h-12 bg-red-500/20 rounded-full flex items-center justify-center flex-shrink-0"
                     whileHover={{ rotate: 360 }}
                     transition={{ duration: 0.6 }}
                   >
-                    <FaClock className="text-red-500 w-6 h-6" />
+                    <FaClock className="text-red-500 w-5 h-5 sm:w-6 sm:h-6" />
                   </motion.div>
                   <div>
-                    <h4 className="text-white font-semibold mb-1">Business Hours</h4>
-                    <p className="text-slate-300 text-sm">Monday - Sunday: 8:00 AM - 9:00 PM</p>
-                    <p className="text-slate-400 text-sm">Sunday: Closed</p>
+                    <h4 className="text-sm sm:text-base text-white font-semibold mb-1">Business Hours</h4>
+                    <p className="text-xs sm:text-sm text-slate-300">Monday - Sunday: 8:00 AM - 9:00 PM</p>
+                    <p className="text-xs sm:text-sm text-slate-400">Sunday: Closed</p>
                   </div>
                 </motion.div>
 
                 <motion.div 
-                  className="flex items-start gap-4 p-6 bg-slate-800 rounded-2xl hover:bg-slate-700/70 transition-all duration-300"
+                  className="flex items-start gap-3 sm:gap-4 p-4 sm:p-6 bg-slate-800 rounded-xl sm:rounded-2xl hover:bg-slate-700/70 transition-all duration-300"
                   initial={{ opacity: 0, x: -30 }}
                   whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true }}
@@ -269,22 +269,22 @@ export default function ContactPage() {
                   whileHover={{ x: 10, transition: { duration: 0.3 } }}
                 >
                   <motion.div 
-                    className="w-12 h-12 bg-red-500/20 rounded-full flex items-center justify-center flex-shrink-0"
+                    className="w-10 h-10 sm:w-12 sm:h-12 bg-red-500/20 rounded-full flex items-center justify-center flex-shrink-0"
                     whileHover={{ rotate: 360 }}
                     transition={{ duration: 0.6 }}
                   >
-                    <FaShippingFast className="text-red-500 w-6 h-6" />
+                    <FaShippingFast className="text-red-500 w-5 h-5 sm:w-6 sm:h-6" />
                   </motion.div>
                   <div>
-                    <h4 className="text-white font-semibold mb-1">Delivery Service</h4>
-                    <p className="text-slate-300 text-sm">Fast islandwide delivery available</p>
-                    <p className="text-slate-400 text-sm">Get parts delivered to your doorstep</p>
+                    <h4 className="text-sm sm:text-base text-white font-semibold mb-1">Delivery Service</h4>
+                    <p className="text-xs sm:text-sm text-slate-300">Fast islandwide delivery available</p>
+                    <p className="text-xs sm:text-sm text-slate-400">Get parts delivered to your doorstep</p>
                   </div>
                 </motion.div>
               </div>
 
               <motion.div 
-                className="flex gap-4"
+                className="flex flex-col sm:flex-row gap-3 sm:gap-4"
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
@@ -292,7 +292,7 @@ export default function ContactPage() {
               >
                 <motion.a
                   href="tel:+94704150080"
-                  className="flex-1 px-8 py-4 bg-gradient-to-r from-red-600 to-red-700 text-white font-bold rounded-full text-center shadow-lg hover:shadow-red-500/50 transition-all duration-300"
+                  className="flex-1 px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-red-600 to-red-700 text-white text-sm sm:text-base font-bold rounded-full text-center shadow-lg hover:shadow-red-500/50 transition-all duration-300"
                   whileHover={{ scale: 1.05, boxShadow: "0 10px 30px rgba(239, 68, 68, 0.5)" }}
                   whileTap={{ scale: 0.95 }}
                 >
@@ -300,7 +300,7 @@ export default function ContactPage() {
                 </motion.a>
                 <motion.a
                   href="mailto:krmotorssl@gmail.com"
-                  className="flex-1 px-8 py-4 bg-slate-800 text-white font-bold rounded-full text-center shadow-lg hover:bg-slate-700 transition-all duration-300"
+                  className="flex-1 px-6 sm:px-8 py-3 sm:py-4 bg-slate-800 text-white text-sm sm:text-base font-bold rounded-full text-center shadow-lg hover:bg-slate-700 transition-all duration-300"
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                 >
@@ -311,14 +311,14 @@ export default function ContactPage() {
 
             {/* Map */}
             <motion.div
-              className="relative"
+              className="relative order-1 lg:order-2"
               initial={{ opacity: 0, x: 50 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true, margin: "-100px" }}
               transition={{ duration: 0.7, ease: "easeOut" }}
             >
               <motion.div 
-                className="rounded-3xl overflow-hidden shadow-2xl h-[500px] border-4 border-slate-800"
+                className="rounded-2xl sm:rounded-3xl overflow-hidden shadow-2xl h-[300px] sm:h-[400px] lg:h-[500px] border-2 sm:border-4 border-slate-800"
                 whileHover={{ scale: 1.02 }}
                 transition={{ duration: 0.3 }}
               >
@@ -334,14 +334,14 @@ export default function ContactPage() {
               
               {/* Floating badge */}
               <motion.div
-                className="absolute -bottom-6 -left-6 bg-white text-slate-900 p-6 rounded-2xl shadow-2xl"
+                className="absolute -bottom-4 sm:-bottom-6 -left-4 sm:-left-6 bg-white text-slate-900 p-4 sm:p-6 rounded-xl sm:rounded-2xl shadow-2xl"
                 initial={{ scale: 0, rotate: -10 }}
                 whileInView={{ scale: 1, rotate: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: 0.3, duration: 0.5, type: "spring", stiffness: 200 }}
                 whileHover={{ rotate: [0, -5, 5, 0], transition: { duration: 0.5 } }}
               >
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2 sm:gap-3">
                   <motion.div
                     animate={{ 
                       y: [0, -5, 0],
@@ -352,11 +352,11 @@ export default function ContactPage() {
                       ease: "easeInOut"
                     }}
                   >
-                    <FaMapMarkerAlt className="text-red-500 w-8 h-8" />
+                    <FaMapMarkerAlt className="text-red-500 w-6 h-6 sm:w-8 sm:h-8" />
                   </motion.div>
                   <div>
-                    <div className="font-bold">Find Us</div>
-                    <div className="text-sm text-slate-600">Alawwa, Sri Lanka</div>
+                    <div className="text-sm sm:text-base font-bold">Find Us</div>
+                    <div className="text-xs sm:text-sm text-slate-600">Alawwa, Sri Lanka</div>
                   </div>
                 </div>
               </motion.div>
@@ -387,7 +387,7 @@ export default function ContactPage() {
           />
         </div>
 
-        <div className="max-w-6xl mx-auto px-6 py-12 grid md:grid-cols-4 gap-10 relative z-10">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-10 sm:py-12 grid sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-10 relative z-10">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -395,18 +395,18 @@ export default function ContactPage() {
             transition={{ duration: 0.5 }}
           >
             <motion.div 
-              className="flex items-center gap-2 font-bold text-white text-xl mb-4"
+              className="flex items-center gap-2 font-bold text-white text-lg sm:text-xl mb-3 sm:mb-4"
               whileHover={{ scale: 1.05 }}
             >
               <motion.div
                 animate={{ rotate: [0, 10, -10, 0] }}
                 transition={{ duration: 2, repeat: Infinity, repeatDelay: 3 }}
               >
-                <FaCarSide className="w-8 h-8 text-red-500" />
+                <FaCarSide className="w-6 h-6 sm:w-8 sm:h-8 text-red-500" />
               </motion.div>
               KR MOTORS
             </motion.div>
-            <p className="text-sm opacity-80 leading-relaxed">
+            <p className="text-xs sm:text-sm opacity-80 leading-relaxed">
               We provide genuine vehicle parts and accessories, affordable prices,
               and trusted service with islandwide delivery.
             </p>
@@ -418,8 +418,8 @@ export default function ContactPage() {
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.1 }}
           >
-            <h4 className="text-white font-semibold text-lg mb-4">Quick Links</h4>
-            <ul className="space-y-2 text-sm">
+            <h4 className="text-white font-semibold text-base sm:text-lg mb-3 sm:mb-4">Quick Links</h4>
+            <ul className="space-y-1.5 sm:space-y-2 text-xs sm:text-sm">
               {["HOME", "SHOP", "ABOUT", "CONTACT"].map((link, i) => (
                 <motion.li 
                   key={link}
@@ -442,8 +442,8 @@ export default function ContactPage() {
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.2 }}
           >
-            <h4 className="text-white font-semibold text-lg mb-4">Services</h4>
-            <ul className="space-y-2 text-sm">
+            <h4 className="text-white font-semibold text-base sm:text-lg mb-3 sm:mb-4">Services</h4>
+            <ul className="space-y-1.5 sm:space-y-2 text-xs sm:text-sm">
               {[
                 "Genuine Auto Parts",
                 "Islandwide Delivery",
@@ -476,44 +476,44 @@ export default function ContactPage() {
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.3 }}
           >
-            <h4 className="text-white font-semibold text-lg mb-4">Contact Us</h4>
-            <ul className="space-y-2 text-sm mb-4">
+            <h4 className="text-white font-semibold text-base sm:text-lg mb-3 sm:mb-4">Contact Us</h4>
+            <ul className="space-y-1.5 sm:space-y-2 text-xs sm:text-sm mb-3 sm:mb-4">
               <motion.li whileHover={{ x: 5 }} transition={{ duration: 0.2 }}>
-                <a href="tel:+94704150080" className="hover:text-red-500 transition duration-300">+94 704150080</a>
+                <a href="tel:+94704150080" className="hover:text-red-500 transition duration-300 break-words">+94 704150080</a>
               </motion.li>
               <motion.li whileHover={{ x: 5 }} transition={{ duration: 0.2 }}>
-                <a href="mailto:krmotorssl@gmail.com" className="hover:text-red-500 transition duration-300">krmotorssl@gmail.com</a>
+                <a href="mailto:krmotorssl@gmail.com" className="hover:text-red-500 transition duration-300 break-words">krmotorssl@gmail.com</a>
               </motion.li>
             </ul>
-            <div className="flex gap-3 text-white">
+            <div className="flex gap-2 sm:gap-3 text-white">
               <motion.a
                 href="https://www.facebook.com/profile.php?id=61557530297240"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-10 h-10 bg-slate-800 rounded-full flex items-center justify-center hover:bg-red-500 transition duration-300"
+                className="w-9 h-9 sm:w-10 sm:h-10 bg-slate-800 rounded-full flex items-center justify-center hover:bg-red-500 transition duration-300"
                 whileHover={{ scale: 1.2, rotate: 360 }}
                 whileTap={{ scale: 0.9 }}
                 transition={{ duration: 0.4 }}
               >
-                <FaFacebookF />
+                <FaFacebookF className="text-sm sm:text-base" />
               </motion.a>
               <motion.a
                 href="https://www.tiktok.com/@kr_motors_alawwa"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-10 h-10 bg-slate-800 rounded-full flex items-center justify-center hover:bg-red-500 transition duration-300"
+                className="w-9 h-9 sm:w-10 sm:h-10 bg-slate-800 rounded-full flex items-center justify-center hover:bg-red-500 transition duration-300"
                 whileHover={{ scale: 1.2, rotate: -360 }}
                 whileTap={{ scale: 0.9 }}
                 transition={{ duration: 0.4 }}
               >
-                <FaTiktok />
+                <FaTiktok className="text-sm sm:text-base" />
               </motion.a>
             </div>
           </motion.div>
         </div>
 
         <motion.div 
-          className="text-center text-xs py-6 border-t border-white/10 relative z-10"
+          className="text-center text-xs py-5 sm:py-6 border-t border-white/10 relative z-10 px-4"
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}

@@ -10,22 +10,22 @@ export default function AboutUs() {
 
   const values = [
     {
-      icon: <FaAward className="w-12 h-12 text-red-500" />,
+      icon: <FaAward className="w-10 h-10 sm:w-12 sm:h-12 text-red-500" />,
       title: "Quality Assurance",
       text: "Every product is carefully checked for quality and durability.",
     },
     {
-      icon: <FaUsers className="w-12 h-12 text-red-500" />,
+      icon: <FaUsers className="w-10 h-10 sm:w-12 sm:h-12 text-red-500" />,
       title: "Customer First",
       text: "Your satisfaction is our priority with trusted after-sales service.",
     },
     {
-      icon: <FaTools className="w-12 h-12 text-red-500" />,
+      icon: <FaTools className="w-10 h-10 sm:w-12 sm:h-12 text-red-500" />,
       title: "Expert Knowledge",
       text: "Years of experience in vehicle parts and accessories.",
     },
     {
-      icon: <FaShieldAlt className="w-12 h-12 text-red-500" />,
+      icon: <FaShieldAlt className="w-10 h-10 sm:w-12 sm:h-12 text-red-500" />,
       title: "Warranty Protection",
       text: "Original parts with warranty for your peace of mind.",
     },
@@ -52,7 +52,6 @@ export default function AboutUs() {
           />
           <div className="absolute inset-0 bg-gradient-to-br from-slate-900/95 via-slate-900/90 to-red-900/50"></div>
           
-          {/* Floating particles */}
           <div className="absolute inset-0">
             {[...Array(8)].map((_, i) => (
               <motion.div
@@ -77,14 +76,14 @@ export default function AboutUs() {
           </div>
         </div>
 
-        <div className="relative max-w-6xl mx-auto px-6 py-32 text-center z-10">
+        <div className="relative max-w-6xl mx-auto px-4 sm:px-6 py-24 sm:py-28 md:py-32 text-center z-10">
           <motion.div
             initial={{ opacity: 0, y: -30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, ease: "easeOut", delay: 0.2 }}
           >
             <motion.h1
-              className="text-5xl md:text-6xl font-extrabold mb-6 text-white tracking-wide"
+              className="text-4xl sm:text-5xl md:text-6xl font-extrabold mb-4 sm:mb-6 text-white tracking-wide"
               animate={{ 
                 textShadow: [
                   "0 0 20px rgba(239, 68, 68, 0.3)",
@@ -99,7 +98,7 @@ export default function AboutUs() {
           </motion.div>
 
           <motion.p
-            className="text-lg md:text-xl text-slate-200 mb-4 leading-relaxed font-light max-w-3xl mx-auto"
+            className="text-base sm:text-lg md:text-xl text-slate-200 mb-3 sm:mb-4 leading-relaxed font-light max-w-3xl mx-auto"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4, duration: 0.6 }}
@@ -107,7 +106,7 @@ export default function AboutUs() {
             Genuine Vehicle Parts • Affordable Prices
           </motion.p>
           <motion.p
-            className="text-lg md:text-xl text-red-400 font-semibold"
+            className="text-base sm:text-lg md:text-xl text-red-400 font-semibold"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5, duration: 0.6 }}
@@ -118,8 +117,7 @@ export default function AboutUs() {
       </section>
 
       {/* STORY SECTION */}
-      <section className="py-24 bg-gradient-to-b from-slate-900 to-slate-800 relative overflow-hidden">
-        {/* Background pattern */}
+      <section className="py-16 sm:py-20 md:py-24 bg-gradient-to-b from-slate-900 to-slate-800 relative overflow-hidden">
         <div className="absolute inset-0 opacity-5">
           <motion.div 
             className="absolute inset-0" 
@@ -139,13 +137,13 @@ export default function AboutUs() {
         </div>
 
         <motion.div
-          className="relative max-w-6xl mx-auto px-6"
+          className="relative max-w-6xl mx-auto px-4 sm:px-6"
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true, margin: "-100px" }}
           transition={{ duration: 0.6 }}
         >
-          <div className="grid md:grid-cols-2 gap-12 items-center">
+          <div className="grid md:grid-cols-2 gap-8 sm:gap-10 md:gap-12 items-center">
             <motion.div
               initial={{ opacity: 0, x: -50 }}
               whileInView={{ opacity: 1, x: 0 }}
@@ -153,7 +151,7 @@ export default function AboutUs() {
               transition={{ duration: 0.7, ease: "easeOut" }}
             >
               <motion.h2 
-                className="text-4xl md:text-5xl font-bold mb-6 text-white"
+                className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 sm:mb-6 text-white"
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
@@ -162,7 +160,7 @@ export default function AboutUs() {
                 Your Trusted <span className="text-red-500">Auto Parts</span> Partner
               </motion.h2>
               
-              <div className="space-y-6 text-slate-300 leading-relaxed">
+              <div className="space-y-4 sm:space-y-6 text-slate-300 leading-relaxed text-sm sm:text-base">
                 <motion.p
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
@@ -197,7 +195,7 @@ export default function AboutUs() {
             </motion.div>
 
             <motion.div
-              className="relative"
+              className="relative order-first md:order-last"
               initial={{ opacity: 0, x: 50 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true, margin: "-100px" }}
@@ -211,14 +209,14 @@ export default function AboutUs() {
                 <img
                   src="https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?w=800&q=80"
                   alt="Auto Parts"
-                  className="w-full h-[400px] object-cover"
+                  className="w-full h-[300px] sm:h-[350px] md:h-[400px] object-cover"
                   loading="lazy"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 to-transparent"></div>
               </motion.div>
               
               <motion.div
-                className="absolute -bottom-6 -right-6 bg-red-500 text-white p-8 rounded-3xl shadow-2xl"
+                className="absolute -bottom-4 -right-4 sm:-bottom-6 sm:-right-6 bg-red-500 text-white p-6 sm:p-8 rounded-3xl shadow-2xl"
                 initial={{ scale: 0, rotate: -10 }}
                 whileInView={{ scale: 1, rotate: 0 }}
                 viewport={{ once: true }}
@@ -230,13 +228,13 @@ export default function AboutUs() {
                 }}
               >
                 <motion.div 
-                  className="text-4xl font-bold"
+                  className="text-3xl sm:text-4xl font-bold"
                   animate={{ scale: [1, 1.05, 1] }}
                   transition={{ duration: 2, repeat: Infinity }}
                 >
                   10+
                 </motion.div>
-                <div className="text-sm">Years Experience</div>
+                <div className="text-xs sm:text-sm">Years Experience</div>
               </motion.div>
             </motion.div>
           </div>
@@ -244,8 +242,7 @@ export default function AboutUs() {
       </section>
 
       {/* VALUES SECTION */}
-      <section className="py-24 bg-slate-900 relative overflow-hidden">
-        {/* Animated background */}
+      <section className="py-16 sm:py-20 md:py-24 bg-slate-900 relative overflow-hidden">
         <div className="absolute inset-0 opacity-5">
           <motion.div
             className="absolute inset-0"
@@ -266,14 +263,14 @@ export default function AboutUs() {
         </div>
 
         <motion.div
-          className="relative max-w-6xl mx-auto px-6"
+          className="relative max-w-6xl mx-auto px-4 sm:px-6"
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true, margin: "-100px" }}
           transition={{ duration: 0.6 }}
         >
           <motion.h2
-            className="text-4xl md:text-5xl font-bold text-center mb-16 text-white"
+            className="text-3xl sm:text-4xl md:text-5xl font-bold text-center mb-12 sm:mb-16 text-white"
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -282,11 +279,11 @@ export default function AboutUs() {
             Why Choose <span className="text-red-500">Us?</span>
           </motion.h2>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
             {values.map((item, i) => (
               <motion.div
                 key={i}
-                className="relative p-8 bg-gradient-to-br from-slate-800 to-slate-900 shadow-2xl rounded-3xl overflow-hidden group"
+                className="relative p-6 sm:p-8 bg-gradient-to-br from-slate-800 to-slate-900 shadow-2xl rounded-3xl overflow-hidden group"
                 initial={{ opacity: 0, y: 50, scale: 0.9 }}
                 whileInView={{ opacity: 1, y: 0, scale: 1 }}
                 viewport={{ once: true, margin: "-50px" }}
@@ -297,7 +294,6 @@ export default function AboutUs() {
                 }}
                 transition={{ delay: i * 0.15, duration: 0.5, type: "spring", stiffness: 100 }}
               >
-                {/* Hover border effect */}
                 <div className="absolute inset-0 bg-gradient-to-r from-red-500 via-red-600 to-red-700 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-3xl" 
                      style={{ padding: "2px" }}>
                   <div className="w-full h-full bg-gradient-to-br from-slate-800 to-slate-900 rounded-3xl"></div>
@@ -305,7 +301,7 @@ export default function AboutUs() {
 
                 <div className="relative z-10 text-center">
                   <motion.div
-                    className="mb-6 inline-block"
+                    className="mb-4 sm:mb-6 inline-block"
                     whileHover={{ 
                       rotate: [0, -10, 10, -10, 0],
                       scale: 1.2,
@@ -314,11 +310,10 @@ export default function AboutUs() {
                   >
                     {item.icon}
                   </motion.div>
-                  <h3 className="text-xl font-bold text-white mb-4 group-hover:text-red-400 transition-colors duration-300">{item.title}</h3>
+                  <h3 className="text-lg sm:text-xl font-bold text-white mb-3 sm:mb-4 group-hover:text-red-400 transition-colors duration-300">{item.title}</h3>
                   <p className="text-slate-300 leading-relaxed text-sm">{item.text}</p>
                 </div>
 
-                {/* Shine effect */}
                 <motion.div
                   className="absolute top-0 -left-full h-full w-1/2 bg-gradient-to-r from-transparent via-white/20 to-transparent skew-x-12"
                   initial={{ left: "-100%" }}
@@ -332,7 +327,7 @@ export default function AboutUs() {
       </section>
 
       {/* CTA SECTION */}
-      <section className="relative py-24 overflow-hidden">
+      <section className="relative py-16 sm:py-20 md:py-24 overflow-hidden">
         <motion.img
           src="https://images.unsplash.com/photo-1487754180451-c456f719a1fc?w=1200&q=70"
           alt="Workshop"
@@ -345,14 +340,14 @@ export default function AboutUs() {
         <div className="absolute inset-0 bg-gradient-to-r from-slate-900/95 to-slate-900/85"></div>
         
         <motion.div
-          className="relative max-w-4xl mx-auto px-6 text-center"
+          className="relative max-w-4xl mx-auto px-4 sm:px-6 text-center"
           initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-100px" }}
           transition={{ duration: 0.7 }}
         >
           <motion.h2 
-            className="text-4xl md:text-5xl font-bold text-white mb-6"
+            className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-4 sm:mb-6"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -361,7 +356,7 @@ export default function AboutUs() {
             Ready to Get Started?
           </motion.h2>
           <motion.p 
-            className="text-xl text-slate-300 mb-8 italic"
+            className="text-lg sm:text-xl text-slate-300 mb-6 sm:mb-8 italic"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -371,7 +366,7 @@ export default function AboutUs() {
           </motion.p>
           
           <motion.div 
-            className="flex gap-4 justify-center flex-wrap"
+            className="flex gap-3 sm:gap-4 justify-center flex-wrap"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -379,7 +374,7 @@ export default function AboutUs() {
           >
             <Link to="/shop">
               <motion.div
-                className="inline-block px-12 py-4 bg-gradient-to-r from-red-600 to-red-700 text-white font-bold rounded-full shadow-xl relative overflow-hidden group cursor-pointer"
+                className="inline-block px-8 sm:px-10 md:px-12 py-3 sm:py-4 bg-gradient-to-r from-red-600 to-red-700 text-white font-bold rounded-full shadow-xl relative overflow-hidden group cursor-pointer text-sm sm:text-base"
                 whileHover={{ 
                   scale: 1.05,
                   boxShadow: "0 10px 30px rgba(239, 68, 68, 0.5)"
@@ -398,7 +393,7 @@ export default function AboutUs() {
             
             <Link to="/contact">
               <motion.div
-                className="inline-block px-12 py-4 bg-white text-slate-900 font-bold rounded-full shadow-xl hover:bg-slate-100 transition-all duration-300 cursor-pointer"
+                className="inline-block px-8 sm:px-10 md:px-12 py-3 sm:py-4 bg-white text-slate-900 font-bold rounded-full shadow-xl hover:bg-slate-100 transition-all duration-300 cursor-pointer text-sm sm:text-base"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
@@ -411,7 +406,6 @@ export default function AboutUs() {
 
       {/* FOOTER */}
       <footer className="bg-slate-950 text-slate-300 relative overflow-hidden">
-        {/* Animated background */}
         <div className="absolute inset-0 opacity-10">
           <motion.div
             className="absolute inset-0"
@@ -431,7 +425,7 @@ export default function AboutUs() {
           />
         </div>
 
-        <div className="max-w-6xl mx-auto px-6 py-12 grid md:grid-cols-4 gap-10 relative z-10">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8 sm:py-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 lg:gap-10 relative z-10">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -439,18 +433,18 @@ export default function AboutUs() {
             transition={{ duration: 0.5 }}
           >
             <motion.div 
-              className="flex items-center gap-2 font-bold text-white text-xl mb-4"
+              className="flex items-center gap-2 font-bold text-white text-lg sm:text-xl mb-4"
               whileHover={{ scale: 1.05 }}
             >
               <motion.div
                 animate={{ rotate: [0, 10, -10, 0] }}
                 transition={{ duration: 2, repeat: Infinity, repeatDelay: 3 }}
               >
-                <FaCarSide className="w-8 h-8 text-red-500" />
+                <FaCarSide className="w-6 h-6 sm:w-8 sm:h-8 text-red-500" />
               </motion.div>
               KR MOTORS
             </motion.div>
-            <p className="text-sm opacity-80 leading-relaxed">
+            <p className="text-xs sm:text-sm opacity-80 leading-relaxed">
               We provide genuine vehicle parts and accessories, affordable prices,
               and trusted service with islandwide delivery.
             </p>
@@ -462,8 +456,8 @@ export default function AboutUs() {
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.1 }}
           >
-            <h4 className="text-white font-semibold text-lg mb-4">Quick Links</h4>
-            <ul className="space-y-2 text-sm">
+            <h4 className="text-white font-semibold text-base sm:text-lg mb-4">Quick Links</h4>
+            <ul className="space-y-2 text-xs sm:text-sm">
               {[
                 { name: "HOME", path: "/" },
                 { name: "SHOP", path: "/shop" },
@@ -491,8 +485,8 @@ export default function AboutUs() {
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.2 }}
           >
-            <h4 className="text-white font-semibold text-lg mb-4">Services</h4>
-            <ul className="space-y-2 text-sm">
+            <h4 className="text-white font-semibold text-base sm:text-lg mb-4">Services</h4>
+            <ul className="space-y-2 text-xs sm:text-sm">
               {[
                 "Genuine Auto Parts",
                 "Islandwide Delivery",
@@ -525,13 +519,13 @@ export default function AboutUs() {
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.3 }}
           >
-            <h4 className="text-white font-semibold text-lg mb-4">Contact Us</h4>
-            <ul className="space-y-2 text-sm mb-4">
+            <h4 className="text-white font-semibold text-base sm:text-lg mb-4">Contact Us</h4>
+            <ul className="space-y-2 text-xs sm:text-sm mb-4">
               <motion.li whileHover={{ x: 5 }} transition={{ duration: 0.2 }}>
                 <a href="tel:+94704150080" className="hover:text-red-500 transition duration-300">+94 704150080</a>
               </motion.li>
               <motion.li whileHover={{ x: 5 }} transition={{ duration: 0.2 }}>
-                <a href="mailto:krmotorssl@gmail.com" className="hover:text-red-500 transition duration-300">krmotorssl@gmail.com</a>
+                <a href="mailto:krmotorssl@gmail.com" className="hover:text-red-500 transition duration-300 break-all">krmotorssl@gmail.com</a>
               </motion.li>
             </ul>
             <div className="flex gap-3 text-white">
@@ -539,30 +533,30 @@ export default function AboutUs() {
                 href="https://www.facebook.com/profile.php?id=61557530297240"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-10 h-10 bg-slate-800 rounded-full flex items-center justify-center hover:bg-red-500 transition duration-300"
+                className="w-9 h-9 sm:w-10 sm:h-10 bg-slate-800 rounded-full flex items-center justify-center hover:bg-red-500 transition duration-300"
                 whileHover={{ scale: 1.2, rotate: 360 }}
                 whileTap={{ scale: 0.9 }}
                 transition={{ duration: 0.4 }}
               >
-                <FaFacebookF />
+                <FaFacebookF className="text-sm" />
               </motion.a>
               <motion.a
                 href="https://www.tiktok.com/@kr_motors_alawwa"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-10 h-10 bg-slate-800 rounded-full flex items-center justify-center hover:bg-red-500 transition duration-300"
+                className="w-9 h-9 sm:w-10 sm:h-10 bg-slate-800 rounded-full flex items-center justify-center hover:bg-red-500 transition duration-300"
                 whileHover={{ scale: 1.2, rotate: -360 }}
                 whileTap={{ scale: 0.9 }}
                 transition={{ duration: 0.4 }}
               >
-                <FaTiktok />
+                <FaTiktok className="text-sm" />
               </motion.a>
             </div>
           </motion.div>
         </div>
 
         <motion.div 
-          className="text-center text-xs py-6 border-t border-white/10 relative z-10"
+          className="text-center text-xs py-4 sm:py-6 border-t border-white/10 relative z-10"
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
