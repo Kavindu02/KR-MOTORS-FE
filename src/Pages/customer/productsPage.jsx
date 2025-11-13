@@ -161,7 +161,7 @@ export default function ProductsPage() {
       <section className="relative bg-slate-950 overflow-hidden">
         <div className="absolute inset-0">
           <motion.img
-            src="https://images.unsplash.com/photo-1508328991403-28528188c065?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MjR8fHZlaGljbGVzfGVufDB8fDB8fHwy&auto=format&fit=crop&q=60&w=600"
+            src="https://images.unsplash.com/photo-1653597236828-fa4b835ec9c1?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8dmVoaWNsZSUyMHByb2R1Y3QlMjBwYWdlfGVufDB8fDB8fHww"
             alt="Auto Parts"
             className="w-full h-full object-cover"
             loading="eager"
