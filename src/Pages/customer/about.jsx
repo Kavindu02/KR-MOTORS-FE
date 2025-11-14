@@ -1,10 +1,30 @@
 import { motion } from "framer-motion";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { FaCarSide, FaFacebookF, FaTiktok, FaAward, FaUsers, FaTools, FaShieldAlt } from "react-icons/fa";
 
+const scaleIn = {
+  hidden: { scale: 0.8, opacity: 0 },
+  show: { 
+    scale: 1, 
+    opacity: 1,
+    transition: {
+      type: "spring",
+      stiffness: 100,
+      damping: 15
+    }
+  }
+};
+
 export default function AboutUs() {
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'instant' });
+    // Simulate loading time
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 1500);
+    return () => clearTimeout(timer);
   }, []);
 
   const values = [
@@ -29,6 +49,37 @@ export default function AboutUs() {
       text: "Original parts with warranty for your peace of mind.",
     },
   ];
+
+  if (loading) {
+    return (
+      <div className="relative flex items-center justify-center min-h-screen bg-slate-950 overflow-hidden">
+        <div className="absolute inset-0">
+          <motion.img
+            src="aboutpagehero.jpg"
+            alt="Auto Parts"
+            className="w-full h-full object-cover"
+            initial={{ scale: 1.2 }}
+            animate={{ scale: 1 }}
+            transition={{ duration: 10, repeat: Infinity, repeatType: "reverse" }}
+          />
+          <div className="absolute inset-0 bg-gradient-to-br from-slate-900/95 via-slate-900/90 to-red-900/50"></div>
+        </div>
+        <motion.div
+          className="relative z-10 text-slate-300 text-lg flex items-center gap-3"
+          initial="hidden"
+          animate="show"
+          variants={scaleIn}
+        >
+          <motion.div
+            className="w-8 h-8 border-4 border-red-500 border-t-transparent rounded-full"
+            animate={{ rotate: 360 }}
+            transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+          />
+          Loading about...
+        </motion.div>
+      </div>
+    );
+  }
 
   return (
     <motion.div

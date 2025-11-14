@@ -2,12 +2,31 @@ import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { FaPhone, FaEnvelope, FaMapMarkerAlt, FaCarSide, FaFacebookF, FaTiktok, FaClock, FaShippingFast } from "react-icons/fa";
 
+const scaleIn = {
+  hidden: { scale: 0.8, opacity: 0 },
+  show: { 
+    scale: 1, 
+    opacity: 1,
+    transition: {
+      type: "spring",
+      stiffness: 100,
+      damping: 15
+    }
+  }
+};
+
 export default function ContactPage() {
   const [isLoaded, setIsLoaded] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'instant' });
-    setIsLoaded(true);
+    // Simulate loading time
+    const timer = setTimeout(() => {
+      setLoading(false);
+      setIsLoaded(true);
+    }, 1500);
+    return () => clearTimeout(timer);
   }, []);
 
   const contactMethods = [
@@ -15,7 +34,7 @@ export default function ContactPage() {
       icon: <FaPhone className="w-6 h-6 sm:w-8 sm:h-8" />,
       title: "Call Us",
       detail: "+94 704150080",
-      subtext: "Mon-Sun, 8AM-9PM",
+      subtext: "Mon-Sun, 9AM-6PM",
       link: "tel:+94704150080"
     },
     {
@@ -33,6 +52,37 @@ export default function ContactPage() {
       link: "#map"
     }
   ];
+
+  if (loading) {
+    return (
+      <div className="relative flex items-center justify-center min-h-screen bg-slate-950 overflow-hidden">
+        <div className="absolute inset-0">
+          <motion.img
+            src="contactpagehero.jpg"
+            alt="Contact"
+            className="w-full h-full object-cover"
+            initial={{ scale: 1.2 }}
+            animate={{ scale: 1 }}
+            transition={{ duration: 10, repeat: Infinity, repeatType: "reverse" }}
+          />
+          <div className="absolute inset-0 bg-gradient-to-br from-slate-900/95 via-slate-900/90 to-red-900/50"></div>
+        </div>
+        <motion.div
+          className="relative z-10 text-slate-300 text-lg flex items-center gap-3"
+          initial="hidden"
+          animate="show"
+          variants={scaleIn}
+        >
+          <motion.div
+            className="w-8 h-8 border-4 border-red-500 border-t-transparent rounded-full"
+            animate={{ rotate: 360 }}
+            transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+          />
+          Loading contact...
+        </motion.div>
+      </div>
+    );
+  }
 
   return (
     <motion.div
@@ -255,8 +305,8 @@ export default function ContactPage() {
                   </motion.div>
                   <div>
                     <h4 className="text-sm sm:text-base text-white font-semibold mb-1">Business Hours</h4>
-                    <p className="text-xs sm:text-sm text-slate-300">Monday - Sunday: 8:00 AM - 9:00 PM</p>
-                    <p className="text-xs sm:text-sm text-slate-400">Sunday: Closed</p>
+                    <p className="text-xs sm:text-sm text-slate-300">Monday - Sunday: 9:00 AM - 6:00 PM</p>
+                    <p className="text-xs sm:text-sm text-slate-400">Friday: Closed</p>
                   </div>
                 </motion.div>
 
@@ -367,7 +417,6 @@ export default function ContactPage() {
 
       {/* FOOTER */}
       <footer className="bg-slate-950 text-slate-300 relative overflow-hidden">
-        {/* Animated background */}
         <div className="absolute inset-0 opacity-10">
           <motion.div
             className="absolute inset-0"

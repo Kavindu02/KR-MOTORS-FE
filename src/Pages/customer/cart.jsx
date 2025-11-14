@@ -4,6 +4,7 @@ import { RiDeleteBin5Fill } from "react-icons/ri";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { FaShoppingCart } from "react-icons/fa";
+import { scaleIn } from "./profilePage";
 
 export default function CartPage() {
   const [cart, setCart] = useState([]);
@@ -38,24 +39,35 @@ export default function CartPage() {
 
   const total = cart.reduce((sum, it) => sum + it.price * it.quantity, 0);
 
-  if (loading) {
+ if (loading)
     return (
-      <div className="w-full h-screen flex items-center justify-center bg-slate-900">
+      <div className="relative flex items-center justify-center min-h-screen bg-slate-950 overflow-hidden">
+        <div className="absolute inset-0">
+          <motion.img
+            src="cartpagehero.avif"
+            alt="Sports car"
+            className="w-full h-full object-cover"
+            initial={{ scale: 1.2 }}
+            animate={{ scale: 1 }}
+            transition={{ duration: 10, repeat: Infinity, repeatType: "reverse" }}
+          />
+          <div className="absolute inset-0 bg-gradient-to-br from-slate-900/95 via-slate-900/90 to-red-900/50"></div>
+        </div>
         <motion.div
-          className="flex flex-col items-center gap-4"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
+          className="relative z-10 text-slate-300 text-lg flex items-center gap-3"
+          initial="hidden"
+          animate="show"
+          variants={scaleIn}
         >
           <motion.div
-            className="w-12 h-12 border-3 border-red-500 border-t-transparent rounded-full"
+            className="w-8 h-8 border-4 border-red-500 border-t-transparent rounded-full"
             animate={{ rotate: 360 }}
             transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
           />
-          <span className="text-slate-200">Loading cart...</span>
+          Loading cart...
         </motion.div>
       </div>
     );
-  }
 
   return (
     <div className="flex flex-col min-h-screen bg-slate-900 text-slate-100">

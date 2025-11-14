@@ -370,7 +370,7 @@ export default function ProductsPage() {
             </motion.div>
           ) : (
             <motion.div
-              className="grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2 xl:grid-cols-3"
+              className="grid gap-4 sm:gap-6 grid-cols-2 xl:grid-cols-3"
               variants={staggerContainer}
               initial="hidden"
               animate="show"
