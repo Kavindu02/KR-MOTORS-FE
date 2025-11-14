@@ -92,6 +92,7 @@ export default function ProductsPage() {
   const [maxPrice, setMaxPrice] = useState(50000);
   const [sort, setSort] = useState("latest");
   const [showFilters, setShowFilters] = useState(false);
+  const [pageLoading, setPageLoading] = useState(true);
 
   const fetchProducts = async (searchTerm = "") => {
     try {
@@ -112,7 +113,11 @@ export default function ProductsPage() {
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'instant' });
+    const timer = setTimeout(() => {
+      setPageLoading(false);
+    }, 1500);
     fetchProducts("");
+    return () => clearTimeout(timer);
   }, []);
 
   const [lo, hi] = useMemo(() => {
@@ -148,6 +153,37 @@ export default function ProductsPage() {
     setSort("latest");
     fetchProducts("");
   };
+
+  if (pageLoading) {
+    return (
+      <div className="relative flex items-center justify-center min-h-screen bg-slate-950 overflow-hidden">
+        <div className="absolute inset-0">
+          <motion.img
+            src="productpagehero.jpg"
+            alt="Auto Parts"
+            className="w-full h-full object-cover"
+            initial={{ scale: 1.2 }}
+            animate={{ scale: 1 }}
+            transition={{ duration: 10, repeat: Infinity, repeatType: "reverse" }}
+          />
+          <div className="absolute inset-0 bg-gradient-to-br from-slate-900/95 via-slate-900/90 to-red-900/50"></div>
+        </div>
+        <motion.div
+          className="relative z-10 text-slate-300 text-lg flex items-center gap-3"
+          initial="hidden"
+          animate="show"
+          variants={scaleIn}
+        >
+          <motion.div
+            className="w-8 h-8 border-4 border-red-500 border-t-transparent rounded-full"
+            animate={{ rotate: 360 }}
+            transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+          />
+          Loading products...
+        </motion.div>
+      </div>
+    );
+  }
 
   return (
     <motion.div
