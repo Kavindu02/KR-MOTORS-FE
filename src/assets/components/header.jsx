@@ -12,16 +12,82 @@ export default function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
+  const [cartCount, setCartCount] = useState(0);
+  const [cartBounce, setCartBounce] = useState(false);
 
   const token = localStorage.getItem("token");
 
-  // scroll effect only on home 
+  // Real-time cart count monitoring with proper dependency
+  useEffect(() => {
+    const updateCartCount = () => {
+      try {
+        const cart = JSON.parse(localStorage.getItem("cart") || "[]");
+        const totalItems = Array.isArray(cart) 
+          ? cart.reduce((sum, item) => sum + (parseInt(item.quantity) || 1), 0)
+          : 0;
+        
+        setCartCount(prevCount => {
+          // Trigger bounce animation if count increased
+          if (totalItems > prevCount && prevCount > 0) {
+            setCartBounce(true);
+            setTimeout(() => setCartBounce(false), 600);
+          }
+          return totalItems;
+        });
+      } catch (error) {
+        console.error("Cart parsing error:", error);
+        setCartCount(0);
+      }
+    };
+
+    // Initial count
+    updateCartCount();
+
+    // Listen for storage changes (cross-tab updates)
+    const handleStorageChange = (e) => {
+      if (e.key === "cart" || e.key === null) {
+        updateCartCount();
+      }
+    };
+    window.addEventListener("storage", handleStorageChange);
+
+    // Listen for custom cart update events
+    const handleCartUpdate = () => updateCartCount();
+    window.addEventListener("cartUpdated", handleCartUpdate);
+
+    // Poll for changes more frequently (every 500ms for better responsiveness)
+    const interval = setInterval(updateCartCount, 500);
+
+    return () => {
+      window.removeEventListener("storage", handleStorageChange);
+      window.removeEventListener("cartUpdated", handleCartUpdate);
+      clearInterval(interval);
+    };
+  }, []); // Empty dependency array to avoid re-creating listeners
+
+  // Scroll effect only on home
   useEffect(() => {
     if (!isHome) return;
     const handleScroll = () => setScrolled(window.scrollY > 50);
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, [isHome]);
+
+  // Close dropdowns when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (profileOpen && !e.target.closest(".profile-dropdown")) {
+        setProfileOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [profileOpen]);
+
+  // Close mobile menu on route change
+  useEffect(() => {
+    setMenuOpen(false);
+  }, [location.pathname]);
 
   function handleLogout() {
     localStorage.removeItem("token");
@@ -30,74 +96,271 @@ export default function Header() {
 
   const headerBgClass = isHome
     ? scrolled
-      ? "bg-black/90 shadow-md backdrop-blur"
+      ? "bg-black/90 shadow-md backdrop-blur-md"
       : "bg-transparent"
-    : "bg-black/95 shadow-md";
+    : "bg-black/95 shadow-md backdrop-blur-sm";
 
   return (
     <Fragment>
+      <style>{`
+        @keyframes slideDown {
+          from {
+            opacity: 0;
+            transform: translateY(-10px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        @keyframes fadeIn {
+          from {
+            opacity: 0;
+            transform: scale(0.8);
+          }
+          to {
+            opacity: 1;
+            transform: scale(1);
+          }
+        }
+
+        @keyframes bounce {
+          0%, 100% {
+            transform: scale(1);
+          }
+          25% {
+            transform: scale(1.3);
+          }
+          50% {
+            transform: scale(0.9);
+          }
+          75% {
+            transform: scale(1.15);
+          }
+        }
+
+        @keyframes pulse {
+          0%, 100% {
+            box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
+          }
+          50% {
+            box-shadow: 0 0 0 10px rgba(239, 68, 68, 0);
+          }
+        }
+
+        @keyframes shimmer {
+          0% {
+            background-position: -1000px 0;
+          }
+          100% {
+            background-position: 1000px 0;
+          }
+        }
+
+        .cart-bounce {
+          animation: bounce 0.6s ease-in-out;
+        }
+
+        .cart-badge-pulse {
+          animation: pulse 2s infinite;
+        }
+
+        .dropdown-enter {
+          animation: slideDown 0.3s ease-out;
+        }
+
+        .mobile-menu-enter {
+          animation: slideDown 0.3s ease-out;
+        }
+
+        .nav-link {
+          position: relative;
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .nav-link::after {
+          content: '';
+          position: absolute;
+          bottom: -4px;
+          left: 50%;
+          transform: translateX(-50%);
+          width: 0;
+          height: 2px;
+          background: linear-gradient(90deg, #ef4444, #dc2626);
+          transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .nav-link:hover::after {
+          width: 100%;
+        }
+
+        .icon-hover {
+          position: relative;
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .icon-hover::before {
+          content: '';
+          position: absolute;
+          inset: 0;
+          border-radius: 9999px;
+          background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, transparent 70%);
+          opacity: 0;
+          transition: opacity 0.3s ease;
+        }
+
+        .icon-hover:hover::before {
+          opacity: 1;
+        }
+
+        .icon-hover:hover {
+          transform: translateY(-3px) scale(1.05);
+          background: rgba(255, 255, 255, 0.2);
+        }
+
+        .icon-hover:active {
+          transform: translateY(-1px) scale(0.98);
+        }
+
+        .cart-badge {
+          animation: fadeIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .logo-hover {
+          transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+          filter: drop-shadow(0 0 0 transparent);
+        }
+
+        .logo-hover:hover {
+          transform: scale(1.08) rotate(-2deg);
+          filter: drop-shadow(0 4px 12px rgba(239, 68, 68, 0.3));
+        }
+
+        .mobile-menu-item {
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+          position: relative;
+          overflow: hidden;
+        }
+
+        .mobile-menu-item::before {
+          content: '';
+          position: absolute;
+          left: 0;
+          top: 50%;
+          transform: translateY(-50%);
+          width: 3px;
+          height: 0;
+          background: linear-gradient(180deg, #ef4444, #dc2626);
+          transition: height 0.3s ease;
+        }
+
+        .mobile-menu-item:hover::before {
+          height: 70%;
+        }
+
+        .mobile-menu-item:hover {
+          transform: translateX(8px);
+        }
+
+        .glass-effect {
+          background: rgba(0, 0, 0, 0.8);
+          backdrop-filter: blur(12px) saturate(180%);
+          -webkit-backdrop-filter: blur(12px) saturate(180%);
+        }
+
+        .glow-red {
+          box-shadow: 0 0 20px rgba(239, 68, 68, 0.4), 0 0 40px rgba(239, 68, 68, 0.2);
+        }
+
+        @media (max-width: 768px) {
+          .nav-link::after {
+            bottom: -2px;
+          }
+        }
+      `}</style>
+
       <header
-        className={`fixed top-0 left-0 w-full z-[60] transition-all duration-300 ${headerBgClass} text-white`}
+        className={`fixed top-0 left-0 w-full z-[60] transition-all duration-500 ${headerBgClass} text-white border-b border-white/5`}
       >
-        <div className="max-w-7xl mx-auto flex items-center justify-between h-[90px] px-6 relative">
+        <div className="max-w-7xl mx-auto flex items-center justify-between h-[80px] sm:h-[90px] px-4 sm:px-6 lg:px-8 relative">
           {/* Logo Left */}
           <div
-            className="flex items-center gap-2 font-bold tracking-wide text-lg cursor-pointer"
+            className="flex items-center gap-2 font-bold tracking-wide text-base sm:text-lg cursor-pointer logo-hover z-10"
             onClick={() => navigate("/")}
           >
             <img
               src="/krmotorslogo.png"
-              alt="Logo"
-              className="w-[60px] h-auto object-contain"
+              alt="KR Motors"
+              className="w-[45px] sm:w-[55px] md:w-[60px] h-auto object-contain"
             />
           </div>
 
           {/* Desktop Nav */}
-          <nav className="hidden md:flex items-center gap-6 text-sm uppercase">
-            <Link to="/" className="hover:text-red-500 transition">Home</Link>
-            <Link to="/shop" className="hover:text-red-500 transition">Shop</Link>
-            <Link to="/about" className="hover:text-red-500 transition">About</Link>
-            <Link to="/contact" className="hover:text-red-500 transition">Contact</Link>
+          <nav className="hidden lg:flex items-center gap-4 xl:gap-8 text-sm uppercase font-semibold tracking-wider">
+            <Link to="/" className="nav-link hover:text-red-500 px-3 py-2">
+              Home
+            </Link>
+            <Link to="/shop" className="nav-link hover:text-red-500 px-3 py-2">
+              Shop
+            </Link>
+            <Link to="/about" className="nav-link hover:text-red-500 px-3 py-2">
+              About
+            </Link>
+            <Link to="/contact" className="nav-link hover:text-red-500 px-3 py-2">
+              Contact
+            </Link>
           </nav>
 
           {/* Desktop Right */}
-          <div className="hidden md:flex items-center gap-4 relative">
-            {/* Cart Icon */}
+          <div className="hidden lg:flex items-center gap-3 xl:gap-4 relative">
+            {/* Cart Icon with Badge */}
             <Link
               to="/cart"
-              className="relative flex items-center justify-center p-2 rounded-full hover:bg-white/10 transition"
+              className={`relative flex items-center justify-center w-11 h-11 rounded-full icon-hover ${
+                cartBounce ? "cart-bounce" : ""
+              }`}
+              aria-label={`Shopping cart with ${cartCount} items`}
             >
-              <FaCartShopping className="w-6 h-6" />
+              <FaCartShopping className="w-5 h-5 xl:w-6 xl:h-6 relative z-10" />
+              {cartCount > 0 && (
+                <span className="cart-badge cart-badge-pulse absolute -top-1 -right-1 bg-gradient-to-br from-red-500 to-red-700 text-white text-xs font-bold rounded-full min-w-[22px] h-[22px] flex items-center justify-center shadow-lg border-2 border-black/50">
+                  {cartCount > 99 ? "99+" : cartCount}
+                </span>
+              )}
             </Link>
 
             {/* Profile Icon */}
-            <div className="relative">
+            <div className="relative profile-dropdown">
               <button
                 onClick={() => setProfileOpen(!profileOpen)}
-                className="flex items-center justify-center p-2 rounded-full hover:bg-white/10 transition"
+                className="flex items-center justify-center w-11 h-11 rounded-full icon-hover"
+                aria-label="User profile menu"
               >
-                <FaUser className="w-6 h-6" />
+                <FaUser className="w-5 h-5 xl:w-6 xl:h-6 relative z-10" />
               </button>
 
               {/* Profile Dropdown */}
               {profileOpen && (
-                <div className="absolute right-0 mt-2 w-40 bg-black/95 shadow-lg rounded-md overflow-hidden z-50">
-                  <div className="flex flex-col text-sm">
+                <div className="dropdown-enter absolute right-0 mt-3 w-48 glass-effect shadow-2xl rounded-xl overflow-hidden z-50 border border-white/10">
+                  <div className="flex flex-col text-sm font-medium">
                     {token ? (
                       <>
                         <Link
                           to="/profile"
-                          className="px-4 py-2 hover:bg-white/10"
+                          className="px-5 py-3 hover:bg-white/10 hover:text-red-400 transition-all duration-200 flex items-center gap-3"
                           onClick={() => setProfileOpen(false)}
                         >
-                          Profile
+                          <FaUser className="w-4 h-4" />
+                          <span>My Profile</span>
                         </Link>
+                        <div className="border-t border-white/10" />
                         <button
                           onClick={() => {
                             handleLogout();
                             setProfileOpen(false);
                           }}
-                          className="text-left px-4 py-2 hover:bg-red-600 hover:text-white"
+                          className="text-left px-5 py-3 hover:bg-red-600/90 hover:text-white transition-all duration-200 text-red-400"
                         >
                           Logout
                         </button>
@@ -105,10 +368,10 @@ export default function Header() {
                     ) : (
                       <Link
                         to="/login"
-                        className="px-4 py-2 hover:bg-white/10"
+                        className="px-5 py-3 hover:bg-white/10 hover:text-red-400 transition-all duration-200"
                         onClick={() => setProfileOpen(false)}
                       >
-                        Login
+                        Login / Sign Up
                       </Link>
                     )}
                   </div>
@@ -117,64 +380,109 @@ export default function Header() {
             </div>
           </div>
 
-          {/* Mobile Menu Button */}
-          <button
-            className="md:hidden flex items-center justify-center p-2 rounded-full hover:bg-white/10 transition"
-            onClick={() => setMenuOpen(!menuOpen)}
-          >
-            {menuOpen ? <HiX className="w-7 h-7" /> : <HiMenu className="w-7 h-7" />}
-          </button>
+          {/* Mobile/Tablet Icons & Menu */}
+          <div className="lg:hidden flex items-center gap-2 sm:gap-3">
+            {/* Mobile Cart Icon */}
+            <Link
+              to="/cart"
+              className={`relative flex items-center justify-center w-10 h-10 sm:w-11 sm:h-11 rounded-full icon-hover ${
+                cartBounce ? "cart-bounce" : ""
+              }`}
+              aria-label={`Shopping cart with ${cartCount} items`}
+            >
+              <FaCartShopping className="w-5 h-5 relative z-10" />
+              {cartCount > 0 && (
+                <span className="cart-badge cart-badge-pulse absolute -top-1 -right-1 bg-gradient-to-br from-red-500 to-red-700 text-white text-xs font-bold rounded-full min-w-[20px] h-[20px] flex items-center justify-center shadow-lg border-2 border-black/50">
+                  {cartCount > 99 ? "99+" : cartCount}
+                </span>
+              )}
+            </Link>
+
+            {/* Mobile Menu Button */}
+            <button
+              className="flex items-center justify-center w-10 h-10 sm:w-11 sm:h-11 rounded-full icon-hover"
+              onClick={() => setMenuOpen(!menuOpen)}
+              aria-label="Toggle navigation menu"
+              aria-expanded={menuOpen}
+            >
+              {menuOpen ? (
+                <HiX className="w-6 h-6 sm:w-7 sm:h-7 relative z-10" />
+              ) : (
+                <HiMenu className="w-6 h-6 sm:w-7 sm:h-7 relative z-10" />
+              )}
+            </button>
+          </div>
         </div>
       </header>
 
-      {/*Mobile Dropdown full width */}
+      {/* Mobile Dropdown Menu */}
       {menuOpen && (
-        <div className="md:hidden fixed top-[90px] left-0 w-full bg-black/95 text-white uppercase text-sm shadow-lg z-[70]">
-          <div className="flex flex-col px-6 py-4 space-y-4">
-            <Link to="/" onClick={() => setMenuOpen(false)} className="hover:text-red-500">Home</Link>
-            <Link to="/shop" onClick={() => setMenuOpen(false)} className="hover:text-red-500">Shop</Link>
-            <Link to="/about" onClick={() => setMenuOpen(false)} className="hover:text-red-500">About</Link>
-            <Link to="/contact" onClick={() => setMenuOpen(false)} className="hover:text-red-500">Contact</Link>
-
-            <div className="border-t border-gray-700 my-2" />
-
+        <div className="mobile-menu-enter lg:hidden fixed top-[80px] sm:top-[90px] left-0 w-full glass-effect text-white shadow-2xl z-[70] border-t border-white/10">
+          <div className="flex flex-col px-4 sm:px-6 py-5 space-y-1 max-h-[calc(100vh-80px)] sm:max-h-[calc(100vh-90px)] overflow-y-auto">
+            {/* Navigation Links */}
             <Link
-              to="/cart"
+              to="/"
               onClick={() => setMenuOpen(false)}
-              className="flex items-center gap-2 hover:text-red-500"
+              className="mobile-menu-item uppercase text-sm font-semibold tracking-wider hover:text-red-400 hover:bg-white/5 px-4 py-3 rounded-lg transition-all duration-300"
             >
-              <FaCartShopping className="w-5 h-5" />
-              <span>Cart</span>
+              Home
+            </Link>
+            <Link
+              to="/shop"
+              onClick={() => setMenuOpen(false)}
+              className="mobile-menu-item uppercase text-sm font-semibold tracking-wider hover:text-red-400 hover:bg-white/5 px-4 py-3 rounded-lg transition-all duration-300"
+            >
+              Shop
+            </Link>
+            <Link
+              to="/about"
+              onClick={() => setMenuOpen(false)}
+              className="mobile-menu-item uppercase text-sm font-semibold tracking-wider hover:text-red-400 hover:bg-white/5 px-4 py-3 rounded-lg transition-all duration-300"
+            >
+              About
+            </Link>
+            <Link
+              to="/contact"
+              onClick={() => setMenuOpen(false)}
+              className="mobile-menu-item uppercase text-sm font-semibold tracking-wider hover:text-red-400 hover:bg-white/5 px-4 py-3 rounded-lg transition-all duration-300"
+            >
+              Contact
             </Link>
 
+            <div className="border-t border-white/20 my-3" />
+
+            {/* User Actions */}
             {token ? (
               <>
                 <Link
                   to="/profile"
                   onClick={() => setMenuOpen(false)}
-                  className="flex items-center gap-2 hover:text-red-500"
+                  className="mobile-menu-item flex items-center gap-3 text-sm font-medium hover:text-red-400 hover:bg-white/5 px-4 py-3 rounded-lg transition-all duration-300"
                 >
                   <FaUser className="w-5 h-5" />
-                  <span>Profile</span>
+                  <span>My Profile</span>
                 </Link>
                 <button
                   onClick={() => {
                     handleLogout();
                     setMenuOpen(false);
                   }}
-                  className="text-left text-red-400 hover:text-red-500"
+                  className="mobile-menu-item text-left text-sm font-medium text-red-400 hover:text-red-300 hover:bg-red-500/10 px-4 py-3 rounded-lg transition-all duration-300 flex items-center gap-3"
                 >
-                  Logout
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                  </svg>
+                  <span>Logout</span>
                 </button>
               </>
             ) : (
               <Link
                 to="/login"
                 onClick={() => setMenuOpen(false)}
-                className="flex items-center gap-2 hover:text-red-500"
+                className="mobile-menu-item flex items-center gap-3 text-sm font-medium hover:text-red-400 hover:bg-white/5 px-4 py-3 rounded-lg transition-all duration-300"
               >
                 <FaUser className="w-5 h-5" />
-                <span>Login</span>
+                <span>Login / Sign Up</span>
               </Link>
             )}
           </div>
@@ -182,7 +490,13 @@ export default function Header() {
       )}
 
       {/* Spacer for non-home pages */}
-      {!isHome && <div className="h-[90px] w-full" aria-hidden="true" />}
+      {!isHome && <div className="h-[80px] sm:h-[90px] w-full" aria-hidden="true" />}
     </Fragment>
   );
+}
+
+// Optional: Helper function to trigger cart updates from anywhere in your app
+// Call this after adding/removing items from cart
+export function triggerCartUpdate() {
+  window.dispatchEvent(new Event("cartUpdated"));
 }

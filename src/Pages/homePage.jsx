@@ -151,14 +151,6 @@ export default function HomePage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.2 }}
             >
-              {/* Subtitle Badge */}
-              <motion.div
-                className="inline-flex items-center gap-2 px-4 py-2 bg-red-500/20 backdrop-blur-sm border border-red-500/30 rounded-full mb-6"
-                whileHover={{ scale: 1.05 }}
-              >
-                <FaStar className="text-red-500 text-sm" />
-                <span className="text-sm font-semibold text-red-400">Trusted by 10,000+ Customers</span>
-              </motion.div>
 
               {/* Main Heading */}
               <motion.h1
@@ -257,7 +249,7 @@ export default function HomePage() {
           animate={{ y: [0, 10, 0] }}
           transition={{ duration: 2, repeat: Infinity }}
         >
-          <span className="text-xs text-slate-400 uppercase tracking-wider">Scroll Down</span>
+          <span className="text-xs text-slate-400 uppercase tracking-wider"></span>
           <div className="w-6 h-10 border-2 border-white/30 rounded-full flex justify-center p-2">
             <motion.div
               className="w-1.5 h-1.5 bg-red-500 rounded-full"
