@@ -513,7 +513,7 @@ export default function ProductsPage() {
               transition={{ duration: 0.5, delay: 0.1 }}
             >
               <h4 className="text-white font-semibold text-base sm:text-lg mb-4">Quick Links</h4>
-              <ul className="space-y-2 text-xs sm:text-sm">
+              <ul className="space-y-1.5 sm:space-y-2 text-xs sm:text-sm">
                 {[
                   { name: "HOME", path: "/" },
                   { name: "SHOP", path: "/shop" },
@@ -527,9 +527,9 @@ export default function ProductsPage() {
                     viewport={{ once: true }}
                     transition={{ delay: 0.1 + i * 0.05 }}
                   >
-                    <Link to={link.path} className="hover:text-red-500 transition duration-300 inline-block hover:translate-x-2">
+                    <a href={link.path} className="hover:text-red-500 transition duration-300 inline-block hover:translate-x-2">
                       {link.name}
-                    </Link>
+                    </a>
                   </motion.li>
                 ))}
               </ul>

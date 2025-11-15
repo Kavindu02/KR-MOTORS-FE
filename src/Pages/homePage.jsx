@@ -336,26 +336,26 @@ export default function HomePage() {
             transition={{ duration: 0.5, delay: 0.1 }}
           >
             <h4 className="text-white font-semibold text-base sm:text-lg mb-3 sm:mb-4">Quick Links</h4>
-            <ul className="space-y-1.5 sm:space-y-2 text-xs sm:text-sm">
-              {[
-                { name: "HOME", path: "/" },
-                { name: "SHOP", path: "/shop" },
-                { name: "ABOUT", path: "/about" },
-                { name: "CONTACT", path: "/contact" }
-              ].map((link, i) => (
-                <motion.li 
-                  key={link.name}
-                  initial={{ opacity: 0, x: -20 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: 0.1 + i * 0.05 }}
-                >
-                  <Link to={link.path} className="hover:text-red-500 transition duration-300 inline-block hover:translate-x-2">
-                    {link.name}
-                  </Link>
-                </motion.li>
-              ))}
-            </ul>
+           <ul className="space-y-1.5 sm:space-y-2 text-xs sm:text-sm">
+                {[
+                  { name: "HOME", path: "/" },
+                  { name: "SHOP", path: "/shop" },
+                  { name: "ABOUT", path: "/about" },
+                  { name: "CONTACT", path: "/contact" }
+                ].map((link, i) => (
+                  <motion.li 
+                    key={link.name}
+                    initial={{ opacity: 0, x: -20 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: 0.1 + i * 0.05 }}
+                  >
+                    <a href={link.path} className="hover:text-red-500 transition duration-300 inline-block hover:translate-x-2">
+                      {link.name}
+                    </a>
+                  </motion.li>
+                ))}
+              </ul>
           </motion.div>
 
           <motion.div
