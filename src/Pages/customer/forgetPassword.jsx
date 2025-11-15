@@ -100,7 +100,6 @@ export default function ForgetPasswordPage() {
       {/* Animated Background */}
       <div className="absolute inset-0">
         <motion.img
-          src="https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?w=1200&q=80&auto=format"
           alt="Car dashboard"
           className="w-full h-full object-cover"
           initial={{ scale: 1.2 }}

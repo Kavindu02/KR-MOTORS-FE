@@ -82,7 +82,6 @@ export default function RegisterPage() {
       {/* Animated Background */}
       <div className="absolute inset-0">
         <motion.img
-          src="https://images.unsplash.com/photo-1563720360172-67b8f3dce741?w=1200&q=80&auto=format"
           alt="Luxury car interior"
           className="w-full h-full object-cover"
           initial={{ scale: 1.2 }}

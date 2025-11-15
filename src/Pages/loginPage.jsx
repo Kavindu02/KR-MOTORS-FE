@@ -89,7 +89,6 @@ export default function LoginPage() {
       {/* Animated Background */}
       <div className="absolute inset-0">
         <motion.img
-          src="https://images.unsplash.com/photo-1605559424843-9e4c228bf1c2?w=1200&q=80&auto=format"
           alt="Sports car"
           className="w-full h-full object-cover"
           initial={{ scale: 1.2 }}
