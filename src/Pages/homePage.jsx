@@ -224,6 +224,7 @@ export default function HomePage() {
             </motion.div>
           </div>
 
+
           {/* Stats Section */}
           <motion.div
             className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mt-16 sm:mt-20 max-w-5xl mx-auto"
