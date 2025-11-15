@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams, Link } from "react-router-dom";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { FaMinus, FaPlus, FaShoppingCart, FaBolt, FaChevronLeft, FaChevronRight } from "react-icons/fa";
-import { addToCart } from "../../utils/cart"; // ✅ cart functions import
+import { addToCart } from "../../utils/cart";
 
 const slideIn = {
   hidden: { opacity: 0, x: -50 },
@@ -69,11 +69,52 @@ function ImageSlider({ images }) {
   );
 }
 
-function Loader() {
+// Full page loading component
+function PageLoader() {
   return (
-    <motion.div className="flex flex-col items-center gap-4" animate={{ opacity: [0.5, 1, 0.5] }} transition={{ duration: 1.5, repeat: Infinity }}>
-      <div className="w-16 h-16 border-4 border-red-500 border-t-transparent rounded-full animate-spin" />
-      <p className="text-slate-400">Loading product...</p>
+    <motion.div
+      className="fixed inset-0 bg-slate-900 z-50 flex items-center justify-center"
+      initial={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.5 }}
+    >
+      <motion.div
+        className="text-center"
+        initial={{ scale: 0.8, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        transition={{ duration: 0.5 }}
+      >
+        <motion.div
+          className="w-20 h-20 sm:w-24 sm:h-24 border-4 border-red-500 border-t-transparent rounded-full mx-auto mb-6"
+          animate={{ rotate: 360 }}
+          transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+        />
+        <motion.h2
+          className="text-2xl sm:text-3xl font-bold text-white mb-2"
+          animate={{ 
+            opacity: [0.5, 1, 0.5],
+          }}
+          transition={{ duration: 1.5, repeat: Infinity }}
+        >
+          Loading Product
+        </motion.h2>
+        <motion.div className="flex gap-2 justify-center mt-4">
+          {[0, 1, 2].map((i) => (
+            <motion.div
+              key={i}
+              className="w-3 h-3 bg-red-500 rounded-full"
+              animate={{
+                y: [0, -10, 0],
+              }}
+              transition={{
+                duration: 0.6,
+                repeat: Infinity,
+                delay: i * 0.2,
+              }}
+            />
+          ))}
+        </motion.div>
+      </motion.div>
     </motion.div>
   );
 }
@@ -85,21 +126,29 @@ export default function ProductOverviewPage() {
   const [status, setStatus] = useState("loading");
   const [adding, setAdding] = useState(false);
   const [qty, setQty] = useState(1);
+  const [pageLoading, setPageLoading] = useState(true);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'instant' });
     setStatus("loading");
+    setPageLoading(true);
+    
     axios
       .get(`${import.meta.env.VITE_BACKEND_URL}/products/${id}`)
       .then((res) => {
         setProduct(res.data);
         setStatus("success");
         setQty(1);
+        // Simulate loading time
+        setTimeout(() => {
+          setPageLoading(false);
+        }, 1500);
       })
       .catch((error) => {
         console.error(error);
         toast.error("Failed to load product");
         setStatus("error");
+        setPageLoading(false);
       });
   }, [id]);
 
@@ -135,11 +184,7 @@ export default function ProductOverviewPage() {
     });
   }
 
-  if (status === "loading") {
-    return <div className="min-h-screen bg-slate-900 flex items-center justify-center"><Loader /></div>;
-  }
-
-  if (status === "error" || !product) {
+  if (status === "error" || (!pageLoading && !product)) {
     return (
       <div className="min-h-screen bg-slate-900 flex items-center justify-center">
         <div className="text-center">
@@ -150,77 +195,91 @@ export default function ProductOverviewPage() {
     );
   }
 
-  const discount = product.labellPrice > product.price ? Math.round(((product.labellPrice - product.price) / product.labellPrice) * 100) : 0;
+  const discount = product?.labellPrice > product?.price ? Math.round(((product.labellPrice - product.price) / product.labellPrice) * 100) : 0;
   const buttonTap = { scale: 0.95 };
 
   return (
-    <motion.div className="flex flex-col min-h-screen bg-slate-900 text-slate-100" initial="hidden" animate="show" exit="hidden" variants={slideIn}>
-      {/* Breadcrumb */}
-      <div className="bg-slate-950 border-b border-white/10">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-4">
-          <div className="flex flex-wrap items-center gap-2 text-sm text-slate-400">
-            <Link to="/" className="hover:text-red-500 transition">Home</Link>
-            <span>/</span>
-            <Link to="/shop" className="hover:text-red-500 transition">Shop</Link>
-            <span>/</span>
-            <span className="text-white">{product.name}</span>
+    <>
+      {/* Full Page Loader */}
+      <AnimatePresence>
+        {pageLoading && <PageLoader />}
+      </AnimatePresence>
+
+      <motion.div 
+        className="flex flex-col min-h-screen bg-slate-900 text-slate-100" 
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.6 }}
+      >
+        {/* Breadcrumb */}
+        <div className="bg-slate-950 border-b border-white/10">
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 py-4">
+            <div className="flex flex-wrap items-center gap-2 text-sm text-slate-400">
+              <Link to="/" className="hover:text-red-500 transition">Home</Link>
+              <span>/</span>
+              <Link to="/shop" className="hover:text-red-500 transition">Shop</Link>
+              <span>/</span>
+              <span className="text-white">{product?.name || "Product"}</span>
+            </div>
           </div>
         </div>
-      </div>
 
-      {/* Main Content */}
-      <div className="flex-1 py-8 sm:py-12">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
-            <motion.div initial={{ opacity: 0, x: -50 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.6 }}>
-              <ImageSlider images={product.images || [product.image]} />
-            </motion.div>
+        {/* Main Content */}
+        {product && (
+          <div className="flex-1 py-8 sm:py-12">
+            <div className="max-w-6xl mx-auto px-4 sm:px-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
+                <motion.div initial={{ opacity: 0, x: -50 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.6 }}>
+                  <ImageSlider images={product.images || [product.image]} />
+                </motion.div>
 
-            <motion.div initial={{ opacity: 0, x: 50 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.6, delay: 0.2 }} className="space-y-6">
-              {product.category && <div className="inline-block px-3 sm:px-4 py-1 bg-red-500/20 text-red-500 rounded-full text-xs sm:text-sm font-semibold">{product.category}</div>}
-              <h1 className="text-3xl sm:text-4xl font-extrabold text-white leading-tight">{product.name}</h1>
-              <p className="text-slate-300 leading-relaxed text-base sm:text-lg">{product.description}</p>
+                <motion.div initial={{ opacity: 0, x: 50 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.6, delay: 0.2 }} className="space-y-6">
+                  {product.category && <div className="inline-block px-3 sm:px-4 py-1 bg-red-500/20 text-red-500 rounded-full text-xs sm:text-sm font-semibold">{product.category}</div>}
+                  <h1 className="text-3xl sm:text-4xl font-extrabold text-white leading-tight">{product.name}</h1>
+                  <p className="text-slate-300 leading-relaxed text-base sm:text-lg">{product.description}</p>
 
-              {/* Price */}
-              <div className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl p-4 sm:p-6 border border-white/10">
-                {discount > 0 ? (
-                  <div className="flex flex-wrap items-center gap-2 sm:gap-4">
-                    <span className="text-2xl sm:text-3xl font-extrabold text-red-500">Rs. {product.price.toLocaleString()}</span>
-                    <span className="text-sm sm:text-lg text-slate-400 line-through">Rs. {product.labellPrice.toLocaleString()}</span>
-                    <span className="px-2 sm:px-3 py-1 bg-red-500 text-white text-xs sm:text-sm font-bold rounded-full">{discount}% OFF</span>
+                  {/* Price */}
+                  <div className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl p-4 sm:p-6 border border-white/10">
+                    {discount > 0 ? (
+                      <div className="flex flex-wrap items-center gap-2 sm:gap-4">
+                        <span className="text-2xl sm:text-3xl font-extrabold text-red-500">Rs. {product.price.toLocaleString()}</span>
+                        <span className="text-sm sm:text-lg text-slate-400 line-through">Rs. {product.labellPrice.toLocaleString()}</span>
+                        <span className="px-2 sm:px-3 py-1 bg-red-500 text-white text-xs sm:text-sm font-bold rounded-full">{discount}% OFF</span>
+                      </div>
+                    ) : (
+                      <span className="text-2xl sm:text-3xl font-extrabold text-red-500">Rs. {product.price.toLocaleString()}</span>
+                    )}
                   </div>
-                ) : (
-                  <span className="text-2xl sm:text-3xl font-extrabold text-red-500">Rs. {product.price.toLocaleString()}</span>
-                )}
-              </div>
 
-              {/* Quantity */}
-              <div>
-                <label className="block text-sm font-semibold text-slate-300 mb-2 sm:mb-3">Quantity</label>
-                <div className="flex flex-wrap items-center gap-3 sm:gap-4">
-                  <div className="flex items-center gap-2 bg-slate-800 rounded-xl p-1">
-                    <motion.button onClick={() => setQty(q => clampQty(q - 1))} className="w-8 sm:w-10 h-8 sm:h-10 rounded-lg bg-slate-700 hover:bg-red-500 flex items-center justify-center text-white transition-colors" whileHover={{ scale: 1.05 }} whileTap={buttonTap}><FaMinus /></motion.button>
-                    <input type="number" value={qty} onChange={(e) => setQty(clampQty(e.target.value))} className="w-12 sm:w-16 h-8 sm:h-10 text-center bg-transparent text-white font-bold text-sm sm:text-lg outline-none" min={1} max={999} />
-                    <motion.button onClick={() => setQty(q => clampQty(q + 1))} className="w-8 sm:w-10 h-8 sm:h-10 rounded-lg bg-slate-700 hover:bg-red-500 flex items-center justify-center text-white transition-colors" whileHover={{ scale: 1.05 }} whileTap={buttonTap}><FaPlus /></motion.button>
+                  {/* Quantity */}
+                  <div>
+                    <label className="block text-sm font-semibold text-slate-300 mb-2 sm:mb-3">Quantity</label>
+                    <div className="flex flex-wrap items-center gap-3 sm:gap-4">
+                      <div className="flex items-center gap-2 bg-slate-800 rounded-xl p-1">
+                        <motion.button onClick={() => setQty(q => clampQty(q - 1))} className="w-8 sm:w-10 h-8 sm:h-10 rounded-lg bg-slate-700 hover:bg-red-500 flex items-center justify-center text-white transition-colors" whileHover={{ scale: 1.05 }} whileTap={buttonTap}><FaMinus /></motion.button>
+                        <input type="number" value={qty} onChange={(e) => setQty(clampQty(e.target.value))} className="w-12 sm:w-16 h-8 sm:h-10 text-center bg-transparent text-white font-bold text-sm sm:text-lg outline-none" min={1} max={999} />
+                        <motion.button onClick={() => setQty(q => clampQty(q + 1))} className="w-8 sm:w-10 h-8 sm:h-10 rounded-lg bg-slate-700 hover:bg-red-500 flex items-center justify-center text-white transition-colors" whileHover={{ scale: 1.05 }} whileTap={buttonTap}><FaPlus /></motion.button>
+                      </div>
+                      <div className="text-slate-400 text-sm sm:text-base">Subtotal: <span className="text-white font-bold">Rs. {(product.price * qty).toLocaleString()}</span></div>
+                    </div>
                   </div>
-                  <div className="text-slate-400 text-sm sm:text-base">Subtotal: <span className="text-white font-bold">Rs. {(product.price * qty).toLocaleString()}</span></div>
-                </div>
-              </div>
 
-              {/* Action Buttons */}
-              <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
-                <motion.button onClick={handleBuyNow} className="flex-1 px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-red-600 to-red-700 text-white font-bold rounded-full shadow-xl hover:shadow-red-500/50 transition-all relative overflow-hidden group flex items-center justify-center gap-2" whileHover={{ scale: 1.02 }} whileTap={buttonTap}>
-                  <FaBolt /> Buy Now
-                </motion.button>
+                  {/* Action Buttons */}
+                  <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
+                    <motion.button onClick={handleBuyNow} className="flex-1 px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-red-600 to-red-700 text-white font-bold rounded-full shadow-xl hover:shadow-red-500/50 transition-all relative overflow-hidden group flex items-center justify-center gap-2" whileHover={{ scale: 1.02 }} whileTap={buttonTap}>
+                      <FaBolt /> Buy Now
+                    </motion.button>
 
-                <motion.button onClick={handleAddToCart} disabled={adding} className={`flex-1 px-6 sm:px-8 py-3 sm:py-4 border-2 border-red-500 text-white font-bold rounded-full shadow-xl transition-all ${adding ? "opacity-50 cursor-not-allowed" : "hover:bg-red-500"} flex items-center justify-center gap-2`} whileHover={!adding ? { scale: 1.02 } : {}} whileTap={!adding ? buttonTap : {}}>
-                  <FaShoppingCart /> {adding ? "Adding..." : "Add to Cart"}
-                </motion.button>
+                    <motion.button onClick={handleAddToCart} disabled={adding} className={`flex-1 px-6 sm:px-8 py-3 sm:py-4 border-2 border-red-500 text-white font-bold rounded-full shadow-xl transition-all ${adding ? "opacity-50 cursor-not-allowed" : "hover:bg-red-500"} flex items-center justify-center gap-2`} whileHover={!adding ? { scale: 1.02 } : {}} whileTap={!adding ? buttonTap : {}}>
+                      <FaShoppingCart /> {adding ? "Adding..." : "Add to Cart"}
+                    </motion.button>
+                  </div>
+                </motion.div>
               </div>
-            </motion.div>
+            </div>
           </div>
-        </div>
-      </div>
-    </motion.div>
+        )}
+      </motion.div>
+    </>
   );
 }

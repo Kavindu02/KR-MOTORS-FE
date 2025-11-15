@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { FaCarSide, FaUser, FaEnvelope, FaPhone, FaSignOutAlt } from "react-icons/fa";
 
 const fadeInUp = {
@@ -35,25 +35,71 @@ const itemVariant = {
   show: { opacity: 1, x: 0, transition: { duration: 0.4 } }
 };
 
+// Full page loading component
+function PageLoader() {
+  return (
+    <motion.div
+      className="fixed inset-0 bg-slate-900 z-50 flex items-center justify-center"
+      initial={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.5 }}
+    >
+      <motion.div
+        className="text-center"
+        initial={{ scale: 0.8, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        transition={{ duration: 0.5 }}
+      >
+        <motion.div
+          className="w-20 h-20 sm:w-24 sm:h-24 border-4 border-red-500 border-t-transparent rounded-full mx-auto mb-6"
+          animate={{ rotate: 360 }}
+          transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+        />
+        <motion.h2
+          className="text-2xl sm:text-3xl font-bold text-white mb-2"
+          animate={{ 
+            opacity: [0.5, 1, 0.5],
+          }}
+          transition={{ duration: 1.5, repeat: Infinity }}
+        >
+          Loading Profile
+        </motion.h2>
+        <motion.div className="flex gap-2 justify-center mt-4">
+          {[0, 1, 2].map((i) => (
+            <motion.div
+              key={i}
+              className="w-3 h-3 bg-red-500 rounded-full"
+              animate={{
+                y: [0, -10, 0],
+              }}
+              transition={{
+                duration: 0.6,
+                repeat: Infinity,
+                delay: i * 0.2,
+              }}
+            />
+          ))}
+        </motion.div>
+      </motion.div>
+    </motion.div>
+  );
+}
+
 export default function ProfilePage() {
-  // IMPORTANT: Replace these with actual API calls in your real application
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    // Simulate API call - REPLACE THIS with your actual API call
     const fetchUserData = async () => {
       try {
         const token = localStorage.getItem("token");
         
         if (!token) {
-          // Redirect to login if no token
           window.location.href = "/login";
           return;
         }
 
-        // REPLACE THIS URL with your actual backend URL
         const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/users`, {
           method: "GET",
           headers: {
@@ -68,19 +114,19 @@ export default function ProfilePage() {
 
         const data = await response.json();
         
-        // Check if user is admin and redirect
         if (data.role === "admin") {
           window.location.href = "/admin";
           return;
         }
 
         setUser(data);
-        setLoading(false);
+        setTimeout(() => {
+          setLoading(false);
+        }, 1500);
       } catch (err) {
         console.error("Error fetching user:", err);
         setError(err.message);
-        localStorage.removeItem("token");
-        window.location.href = "/login";
+        setLoading(false);
       }
     };
 
@@ -88,47 +134,17 @@ export default function ProfilePage() {
   }, []);
 
   const handleLogout = () => {
-    // Remove token from localStorage
     localStorage.removeItem("token");
-    
-    // Show success message (if you have toast library)
-    // toast.success("Logged out successfully");
-    
-    // Redirect to login page
     window.location.href = "/login";
   };
 
-  if (loading)
-    return (
-      <div className="relative flex items-center justify-center min-h-screen bg-slate-950 overflow-hidden">
-        <div className="absolute inset-0">
-          <motion.img
-            
-            alt="Sports car"
-            className="w-full h-full object-cover"
-            initial={{ scale: 1.2 }}
-            animate={{ scale: 1 }}
-            transition={{ duration: 10, repeat: Infinity, repeatType: "reverse" }}
-          />
-          <div className="absolute inset-0 bg-gradient-to-br from-slate-900/95 via-slate-900/90 to-red-900/50"></div>
-        </div>
-        <motion.div
-          className="relative z-10 text-slate-300 text-lg flex items-center gap-3"
-          initial="hidden"
-          animate="show"
-          variants={scaleIn}
-        >
-          <motion.div
-            className="w-8 h-8 border-4 border-red-500 border-t-transparent rounded-full"
-            animate={{ rotate: 360 }}
-            transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-          />
-          Loading profile...
-        </motion.div>
-      </div>
-    );
+  // Show loading screen
+  if (loading) {
+    return <PageLoader />;
+  }
 
-  if (error)
+  // Show error screen
+  if (error) {
     return (
       <div className="relative flex items-center justify-center min-h-screen bg-slate-950 overflow-hidden">
         <div className="absolute inset-0">
@@ -152,15 +168,19 @@ export default function ProfilePage() {
         </motion.div>
       </div>
     );
+  }
 
-  if (!user) return null;
-
+  // Show profile content
   return (
-    <div className="relative flex items-center justify-center min-h-screen bg-slate-950 overflow-hidden py-8 px-4 sm:px-6 lg:px-8">
+    <motion.div 
+      className="relative flex items-center justify-center min-h-screen bg-slate-950 overflow-hidden py-8 px-4 sm:px-6 lg:px-8"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.6 }}
+    >
       {/* Animated Background */}
       <div className="absolute inset-0">
         <motion.img
-          
           alt="Sports car"
           className="w-full h-full object-cover"
           initial={{ scale: 1.2 }}
@@ -245,7 +265,7 @@ export default function ProfilePage() {
                 animate="show"
               >
                 <div className="relative">
-                  {user.image ? (
+                  {user?.image ? (
                     <motion.img
                       src={user.image}
                       alt="Profile"
@@ -263,8 +283,8 @@ export default function ProfilePage() {
                       transition={{ duration: 0.5 }}
                       whileHover={{ scale: 1.05 }}
                     >
-                      {user.firstName?.charAt(0) || "U"}
-                      {user.lastName?.charAt(0) || ""}
+                      {user?.firstName?.charAt(0) || "U"}
+                      {user?.lastName?.charAt(0) || ""}
                     </motion.div>
                   )}
                 </div>
@@ -280,7 +300,7 @@ export default function ProfilePage() {
                   }}
                   transition={{ duration: 2, repeat: Infinity }}
                 >
-                  {user.firstName || "User"} {user.lastName || ""}
+                  {user?.firstName || "User"} {user?.lastName || ""}
                 </motion.h2>
 
                 <motion.p 
@@ -312,25 +332,25 @@ export default function ProfilePage() {
                     { 
                       icon: FaUser, 
                       label: "First Name", 
-                      value: user.firstName || "Not Provided",
+                      value: user?.firstName || "Not Provided",
                       color: "text-blue-400"
                     },
                     { 
                       icon: FaUser, 
                       label: "Last Name", 
-                      value: user.lastName || "Not Provided",
+                      value: user?.lastName || "Not Provided",
                       color: "text-purple-400"
                     },
                     { 
                       icon: FaEnvelope, 
                       label: "Email", 
-                      value: user.email || "Not Provided",
+                      value: user?.email || "Not Provided",
                       color: "text-green-400"
                     },
                     { 
                       icon: FaPhone, 
                       label: "Phone", 
-                      value: user.phone || "Not Provided",
+                      value: user?.phone || "Not Provided",
                       color: "text-orange-400"
                     },
                   ].map(({ icon: Icon, label, value, color }, index) => (
@@ -391,6 +411,6 @@ export default function ProfilePage() {
           />
         </svg>
       </div>
-    </div>
+    </motion.div>
   );
 }
