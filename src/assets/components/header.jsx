@@ -639,7 +639,7 @@ export default function Header() {
                 className="mobile-menu-item flex items-center gap-3 text-sm font-medium hover:text-red-400 hover:bg-white/5 px-4 py-3 rounded-lg transition-all duration-300"
               >
                 <FaUser className="w-5 h-5" />
-                <span>Login / Sign Up</span>
+                <span>Login</span>
               </Link>
             )}
           </div>
@@ -697,7 +697,7 @@ export default function Header() {
                 onClick={() => setProfileOpen(false)}
               >
                 <FaUser className="w-4 h-4" />
-                <span>Login / Sign Up</span>
+                <span>Login</span>
               </Link>
             )}
           </div>
