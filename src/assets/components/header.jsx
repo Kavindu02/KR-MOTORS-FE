@@ -495,7 +495,7 @@ export default function Header() {
                         onClick={() => setProfileOpen(false)}
                       >
                         <FaUser className="w-4 h-4" />
-                        <span>Login / Sign Up</span>
+                        <span>Login</span>
                       </Link>
                     )}
                   </div>
