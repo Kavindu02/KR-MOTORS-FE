@@ -14,10 +14,45 @@ export default function Header() {
   const [profileOpen, setProfileOpen] = useState(false);
   const [cartCount, setCartCount] = useState(0);
   const [cartBounce, setCartBounce] = useState(false);
+  const [userInitial, setUserInitial] = useState("");
+  const [userName, setUserName] = useState("");
 
   const token = localStorage.getItem("token");
 
-  // Real-time cart count monitoring with proper dependency
+  // Get user data and extract first letter of first name
+  useEffect(() => {
+    if (token) {
+      try {
+        const userData = JSON.parse(localStorage.getItem("user") || "{}");
+        const firstName = userData.firstName || userData.name || userData.username || "";
+        
+        if (firstName) {
+          setUserInitial(firstName.charAt(0).toUpperCase());
+          setUserName(firstName);
+        } else {
+          // Fallback: try to get from token payload if it's a JWT
+          try {
+            const payload = JSON.parse(atob(token.split('.')[1]));
+            const name = payload.firstName || payload.name || payload.username || "";
+            setUserInitial(name.charAt(0).toUpperCase());
+            setUserName(name);
+          } catch {
+            setUserInitial("U");
+            setUserName("User");
+          }
+        }
+      } catch (error) {
+        console.error("Error parsing user data:", error);
+        setUserInitial("U");
+        setUserName("User");
+      }
+    } else {
+      setUserInitial("");
+      setUserName("");
+    }
+  }, [token]);
+
+  // Real-time cart count monitoring
   useEffect(() => {
     const updateCartCount = () => {
       try {
@@ -27,7 +62,6 @@ export default function Header() {
           : 0;
         
         setCartCount(prevCount => {
-          // Trigger bounce animation if count increased
           if (totalItems > prevCount && prevCount > 0) {
             setCartBounce(true);
             setTimeout(() => setCartBounce(false), 600);
@@ -40,10 +74,8 @@ export default function Header() {
       }
     };
 
-    // Initial count
     updateCartCount();
 
-    // Listen for storage changes (cross-tab updates)
     const handleStorageChange = (e) => {
       if (e.key === "cart" || e.key === null) {
         updateCartCount();
@@ -51,11 +83,9 @@ export default function Header() {
     };
     window.addEventListener("storage", handleStorageChange);
 
-    // Listen for custom cart update events
     const handleCartUpdate = () => updateCartCount();
     window.addEventListener("cartUpdated", handleCartUpdate);
 
-    // Poll for changes more frequently (every 500ms for better responsiveness)
     const interval = setInterval(updateCartCount, 500);
 
     return () => {
@@ -63,7 +93,7 @@ export default function Header() {
       window.removeEventListener("cartUpdated", handleCartUpdate);
       clearInterval(interval);
     };
-  }, []); // Empty dependency array to avoid re-creating listeners
+  }, []);
 
   // Scroll effect only on home
   useEffect(() => {
@@ -91,6 +121,9 @@ export default function Header() {
 
   function handleLogout() {
     localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    setUserInitial("");
+    setUserName("");
     navigate("/login");
   }
 
@@ -158,6 +191,29 @@ export default function Header() {
           }
         }
 
+        @keyframes initialReveal {
+          0% {
+            opacity: 0;
+            transform: scale(0.5) rotate(-180deg);
+          }
+          60% {
+            transform: scale(1.1) rotate(10deg);
+          }
+          100% {
+            opacity: 1;
+            transform: scale(1) rotate(0deg);
+          }
+        }
+
+        @keyframes gradientShift {
+          0%, 100% {
+            background-position: 0% 50%;
+          }
+          50% {
+            background-position: 100% 50%;
+          }
+        }
+
         .cart-bounce {
           animation: bounce 0.6s ease-in-out;
         }
@@ -172,6 +228,43 @@ export default function Header() {
 
         .mobile-menu-enter {
           animation: slideDown 0.3s ease-out;
+        }
+
+        .initial-reveal {
+          animation: initialReveal 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .user-initial-avatar {
+          background: linear-gradient(135deg, #ef4444 0%, #dc2626 50%, #b91c1c 100%);
+          background-size: 200% 200%;
+          animation: gradientShift 3s ease infinite;
+          font-weight: 700;
+          letter-spacing: 0.5px;
+          text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+          position: relative;
+          overflow: hidden;
+        }
+
+        .user-initial-avatar::before {
+          content: '';
+          position: absolute;
+          top: -50%;
+          left: -50%;
+          width: 200%;
+          height: 200%;
+          background: linear-gradient(
+            45deg,
+            transparent 30%,
+            rgba(255, 255, 255, 0.3) 50%,
+            transparent 70%
+          );
+          transform: rotate(45deg);
+          animation: shimmer 3s infinite;
+        }
+
+        .user-initial-avatar:hover {
+          transform: scale(1.05) rotate(5deg);
+          box-shadow: 0 0 25px rgba(239, 68, 68, 0.6);
         }
 
         .nav-link {
@@ -330,19 +423,46 @@ export default function Header() {
               )}
             </Link>
 
-            {/* Profile Icon */}
+            {/* Profile Icon/Initial */}
             <div className="relative profile-dropdown">
               <button
                 onClick={() => setProfileOpen(!profileOpen)}
-                className="flex items-center justify-center w-11 h-11 rounded-full icon-hover"
+                className={`flex items-center justify-center w-11 h-11 rounded-full transition-all duration-300 ${
+                  token && userInitial 
+                    ? "user-initial-avatar initial-reveal text-white border-2 border-white/20 shadow-lg" 
+                    : "icon-hover"
+                }`}
                 aria-label="User profile menu"
+                title={token && userName ? `Hello, ${userName}!` : "Profile"}
               >
-                <FaUser className="w-5 h-5 xl:w-6 xl:h-6 relative z-10" />
+                {token && userInitial ? (
+                  <span className="relative z-10 text-base xl:text-lg font-bold">
+                    {userInitial}
+                  </span>
+                ) : (
+                  <FaUser className="w-5 h-5 xl:w-6 xl:h-6 relative z-10" />
+                )}
               </button>
 
               {/* Profile Dropdown */}
               {profileOpen && (
-                <div className="dropdown-enter absolute right-0 mt-3 w-48 glass-effect shadow-2xl rounded-xl overflow-hidden z-50 border border-white/10">
+                <div className="dropdown-enter absolute right-0 mt-3 w-56 glass-effect shadow-2xl rounded-xl overflow-hidden z-50 border border-white/10">
+                  {token && userName && (
+                    <div className="px-5 py-4 border-b border-white/10 bg-gradient-to-r from-red-500/10 to-red-600/10">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-full user-initial-avatar flex items-center justify-center text-lg font-bold">
+                          {userInitial}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-semibold text-white truncate">
+                            {userName}
+                          </p>
+                          <p className="text-xs text-gray-400">Welcome back!</p>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                  
                   <div className="flex flex-col text-sm font-medium">
                     {token ? (
                       <>
@@ -360,18 +480,22 @@ export default function Header() {
                             handleLogout();
                             setProfileOpen(false);
                           }}
-                          className="text-left px-5 py-3 hover:bg-red-600/90 hover:text-white transition-all duration-200 text-red-400"
+                          className="text-left px-5 py-3 hover:bg-red-600/90 hover:text-white transition-all duration-200 text-red-400 flex items-center gap-3"
                         >
-                          Logout
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                          </svg>
+                          <span>Logout</span>
                         </button>
                       </>
                     ) : (
                       <Link
                         to="/login"
-                        className="px-5 py-3 hover:bg-white/10 hover:text-red-400 transition-all duration-200"
+                        className="px-5 py-3 hover:bg-white/10 hover:text-red-400 transition-all duration-200 flex items-center gap-3"
                         onClick={() => setProfileOpen(false)}
                       >
-                        Login / Sign Up
+                        <FaUser className="w-4 h-4" />
+                        <span>Login / Sign Up</span>
                       </Link>
                     )}
                   </div>
@@ -398,6 +522,24 @@ export default function Header() {
               )}
             </Link>
 
+            {/* Mobile Profile/Initial */}
+            <button
+              onClick={() => setProfileOpen(!profileOpen)}
+              className={`flex items-center justify-center w-10 h-10 sm:w-11 sm:h-11 rounded-full transition-all duration-300 ${
+                token && userInitial 
+                  ? "user-initial-avatar initial-reveal text-white border-2 border-white/20 shadow-lg text-sm sm:text-base" 
+                  : "icon-hover"
+              }`}
+              aria-label="User profile"
+              title={token && userName ? `Hello, ${userName}!` : "Profile"}
+            >
+              {token && userInitial ? (
+                <span className="relative z-10 font-bold">{userInitial}</span>
+              ) : (
+                <FaUser className="w-5 h-5 relative z-10" />
+              )}
+            </button>
+
             {/* Mobile Menu Button */}
             <button
               className="flex items-center justify-center w-10 h-10 sm:w-11 sm:h-11 rounded-full icon-hover"
@@ -419,6 +561,21 @@ export default function Header() {
       {menuOpen && (
         <div className="mobile-menu-enter lg:hidden fixed top-[80px] sm:top-[90px] left-0 w-full glass-effect text-white shadow-2xl z-[70] border-t border-white/10">
           <div className="flex flex-col px-4 sm:px-6 py-5 space-y-1 max-h-[calc(100vh-80px)] sm:max-h-[calc(100vh-90px)] overflow-y-auto">
+            {/* User Greeting (Mobile) */}
+            {token && userName && (
+              <div className="mb-3 p-4 rounded-lg bg-gradient-to-r from-red-500/10 to-red-600/10 border border-red-500/20">
+                <div className="flex items-center gap-3">
+                  <div className="w-12 h-12 rounded-full user-initial-avatar flex items-center justify-center text-xl font-bold">
+                    {userInitial}
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-base font-semibold text-white">Hello, {userName}!</p>
+                    <p className="text-xs text-gray-400">Welcome back to KR Motors</p>
+                  </div>
+                </div>
+              </div>
+            )}
+
             {/* Navigation Links */}
             <Link
               to="/"
@@ -489,14 +646,71 @@ export default function Header() {
         </div>
       )}
 
+      {/* Mobile Profile Dropdown (if opened via profile button) */}
+      {profileOpen && !menuOpen && (
+        <div className="dropdown-enter lg:hidden fixed top-[80px] sm:top-[90px] right-4 w-56 glass-effect shadow-2xl rounded-xl overflow-hidden z-[70] border border-white/10">
+          {token && userName && (
+            <div className="px-5 py-4 border-b border-white/10 bg-gradient-to-r from-red-500/10 to-red-600/10">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full user-initial-avatar flex items-center justify-center text-lg font-bold">
+                  {userInitial}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-semibold text-white truncate">
+                    {userName}
+                  </p>
+                  <p className="text-xs text-gray-400">Welcome back!</p>
+                </div>
+              </div>
+            </div>
+          )}
+          
+          <div className="flex flex-col text-sm font-medium">
+            {token ? (
+              <>
+                <Link
+                  to="/profile"
+                  className="px-5 py-3 hover:bg-white/10 hover:text-red-400 transition-all duration-200 flex items-center gap-3"
+                  onClick={() => setProfileOpen(false)}
+                >
+                  <FaUser className="w-4 h-4" />
+                  <span>My Profile</span>
+                </Link>
+                <div className="border-t border-white/10" />
+                <button
+                  onClick={() => {
+                    handleLogout();
+                    setProfileOpen(false);
+                  }}
+                  className="text-left px-5 py-3 hover:bg-red-600/90 hover:text-white transition-all duration-200 text-red-400 flex items-center gap-3"
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                  </svg>
+                  <span>Logout</span>
+                </button>
+              </>
+            ) : (
+              <Link
+                to="/login"
+                className="px-5 py-3 hover:bg-white/10 hover:text-red-400 transition-all duration-200 flex items-center gap-3"
+                onClick={() => setProfileOpen(false)}
+              >
+                <FaUser className="w-4 h-4" />
+                <span>Login / Sign Up</span>
+              </Link>
+            )}
+          </div>
+        </div>
+      )}
+
       {/* Spacer for non-home pages */}
       {!isHome && <div className="h-[80px] sm:h-[90px] w-full" aria-hidden="true" />}
     </Fragment>
   );
 }
 
-// Optional: Helper function to trigger cart updates from anywhere in your app
-// Call this after adding/removing items from cart
+// Helper function to trigger cart updates from anywhere in your app
 export function triggerCartUpdate() {
   window.dispatchEvent(new Event("cartUpdated"));
 }
