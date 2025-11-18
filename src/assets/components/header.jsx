@@ -522,23 +522,7 @@ export default function Header() {
               )}
             </Link>
 
-            {/* Mobile Profile/Initial */}
-            <button
-              onClick={() => setProfileOpen(!profileOpen)}
-              className={`flex items-center justify-center w-10 h-10 sm:w-11 sm:h-11 rounded-full transition-all duration-300 ${
-                token && userInitial 
-                  ? "user-initial-avatar initial-reveal text-white border-2 border-white/20 shadow-lg text-sm sm:text-base" 
-                  : "icon-hover"
-              }`}
-              aria-label="User profile"
-              title={token && userName ? `Hello, ${userName}!` : "Profile"}
-            >
-              {token && userInitial ? (
-                <span className="relative z-10 font-bold">{userInitial}</span>
-              ) : (
-                <FaUser className="w-5 h-5 relative z-10" />
-              )}
-            </button>
+           
 
             {/* Mobile Menu Button */}
             <button
@@ -646,63 +630,7 @@ export default function Header() {
         </div>
       )}
 
-      {/* Mobile Profile Dropdown (if opened via profile button) */}
-      {profileOpen && !menuOpen && (
-        <div className="dropdown-enter lg:hidden fixed top-[80px] sm:top-[90px] right-4 w-56 glass-effect shadow-2xl rounded-xl overflow-hidden z-[70] border border-white/10">
-          {token && userName && (
-            <div className="px-5 py-4 border-b border-white/10 bg-gradient-to-r from-red-500/10 to-red-600/10">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full user-initial-avatar flex items-center justify-center text-lg font-bold">
-                  {userInitial}
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-semibold text-white truncate">
-                    {userName}
-                  </p>
-                  <p className="text-xs text-gray-400">Welcome back!</p>
-                </div>
-              </div>
-            </div>
-          )}
-          
-          <div className="flex flex-col text-sm font-medium">
-            {token ? (
-              <>
-                <Link
-                  to="/profile"
-                  className="px-5 py-3 hover:bg-white/10 hover:text-red-400 transition-all duration-200 flex items-center gap-3"
-                  onClick={() => setProfileOpen(false)}
-                >
-                  <FaUser className="w-4 h-4" />
-                  <span>My Profile</span>
-                </Link>
-                <div className="border-t border-white/10" />
-                <button
-                  onClick={() => {
-                    handleLogout();
-                    setProfileOpen(false);
-                  }}
-                  className="text-left px-5 py-3 hover:bg-red-600/90 hover:text-white transition-all duration-200 text-red-400 flex items-center gap-3"
-                >
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                  </svg>
-                  <span>Logout</span>
-                </button>
-              </>
-            ) : (
-              <Link
-                to="/login"
-                className="px-5 py-3 hover:bg-white/10 hover:text-red-400 transition-all duration-200 flex items-center gap-3"
-                onClick={() => setProfileOpen(false)}
-              >
-                <FaUser className="w-4 h-4" />
-                <span>Login</span>
-              </Link>
-            )}
-          </div>
-        </div>
-      )}
+      
 
       {/* Spacer for non-home pages */}
       {!isHome && <div className="h-[80px] sm:h-[90px] w-full" aria-hidden="true" />}
