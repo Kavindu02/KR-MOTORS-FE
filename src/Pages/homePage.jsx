@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
-import { motion, useScroll, useTransform } from "framer-motion";
-import { useEffect } from "react";
-import { FaCarSide, FaFacebookF, FaTiktok, FaShippingFast, FaShieldAlt, FaHeadset, FaStar, FaArrowRight } from "react-icons/fa";
+import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
+import { useEffect, useState } from "react";
+import { FaCarSide, FaFacebookF, FaTiktok, FaShippingFast, FaShieldAlt, FaHeadset, FaStar, FaArrowRight, FaChevronLeft, FaChevronRight } from "react-icons/fa";
 
 const slideIn = {
   hidden: { opacity: 0, x: -50 },
@@ -39,10 +39,76 @@ const scaleIn = {
 export default function HomePage() {
   const { scrollYProgress } = useScroll();
   const y = useTransform(scrollYProgress, [0, 1], [0, -50]);
+  
+  // Hero slider state
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const [direction, setDirection] = useState(0);
+
+  const heroSlides = [
+    {
+      image: "homepagehero.avif",
+      title: "Premium Auto Parts",
+      subtitle: "KR MOTORS",
+      description: "Discover genuine parts, expert service, and unbeatable prices.",
+      highlight: "Your vehicle deserves the best."
+    },
+    {
+      image: "homepage02.avif",
+      title: "Expert Service",
+      subtitle: "QUALITY GUARANTEED",
+      description: "Professional automotive solutions with warranty coverage.",
+      highlight: "Trusted by thousands of customers."
+    },
+    {
+      image: "homepage03.avif",
+      title: "Fast Delivery",
+      subtitle: "ISLANDWIDE",
+      description: "Quick and reliable shipping across Sri Lanka.",
+      highlight: "Get your parts delivered fast."
+    }
+  ];
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'instant' });
+    
+    // Auto-advance slides
+    const timer = setInterval(() => {
+      setDirection(1);
+      setCurrentSlide((prev) => (prev + 1) % heroSlides.length);
+    }, 5000);
+    
+    return () => clearInterval(timer);
   }, []);
+
+  const nextSlide = () => {
+    setDirection(1);
+    setCurrentSlide((prev) => (prev + 1) % heroSlides.length);
+  };
+
+  const prevSlide = () => {
+    setDirection(-1);
+    setCurrentSlide((prev) => (prev - 1 + heroSlides.length) % heroSlides.length);
+  };
+
+  const slideVariants = {
+    enter: (direction) => ({
+      x: direction > 0 ? 1000 : -1000,
+      opacity: 0,
+      scale: 0.8
+    }),
+    center: {
+      zIndex: 1,
+      x: 0,
+      opacity: 1,
+      scale: 1
+    },
+    exit: (direction) => ({
+      zIndex: 0,
+      x: direction < 0 ? 1000 : -1000,
+      opacity: 0,
+      scale: 0.8
+    })
+  };
 
   const features = [
     {
@@ -79,24 +145,72 @@ export default function HomePage() {
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
     >
-      {/* HERO SECTION - Enhanced */}
+      {/* HERO SECTION WITH SLIDER */}
       <section className="relative bg-slate-950 min-h-screen flex items-center overflow-hidden">
-        {/* Parallax Background */}
-        <motion.div className="absolute inset-0" style={{ y }}>
-          <motion.img
-            src="homepagehero.avif"
-            alt="Car"
-            className="w-full h-full object-cover"
-            loading="eager"
-            initial={{ scale: 1.1 }}
-            animate={{ scale: 1 }}
-            transition={{ duration: 1.5 }}
-          />
-          <div className="absolute inset-0 bg-gradient-to-br from-slate-900/95 via-slate-900/90 to-red-900/50"></div>
-        </motion.div>
+        {/* Image Slider */}
+        <AnimatePresence initial={false} custom={direction} mode="wait">
+          <motion.div
+            key={currentSlide}
+            custom={direction}
+            variants={slideVariants}
+            initial="enter"
+            animate="center"
+            exit="exit"
+            transition={{
+              x: { type: "spring", stiffness: 300, damping: 30 },
+              opacity: { duration: 0.5 },
+              scale: { duration: 0.5 }
+            }}
+            className="absolute inset-0"
+          >
+            <img
+              src={heroSlides[currentSlide].image}
+              alt={heroSlides[currentSlide].title}
+              className="w-full h-full object-cover"
+              loading={currentSlide === 0 ? "eager" : "lazy"}
+            />
+            <div className="absolute inset-0 bg-gradient-to-br from-slate-900/95 via-slate-900/90 to-red-900/50"></div>
+          </motion.div>
+        </AnimatePresence>
+
+        {/* Slider Navigation Buttons */}
+        <button
+          onClick={prevSlide}
+          className="absolute left-4 sm:left-8 top-1/2 -translate-y-1/2 z-20 w-12 h-12 sm:w-14 sm:h-14 bg-white/10 backdrop-blur-md border border-white/20 rounded-full flex items-center justify-center text-white hover:bg-red-500 hover:border-red-500 transition-all group"
+          aria-label="Previous slide"
+        >
+          <FaChevronLeft className="text-xl group-hover:scale-110 transition-transform" />
+        </button>
+        
+        <button
+          onClick={nextSlide}
+          className="absolute right-4 sm:right-8 top-1/2 -translate-y-1/2 z-20 w-12 h-12 sm:w-14 sm:h-14 bg-white/10 backdrop-blur-md border border-white/20 rounded-full flex items-center justify-center text-white hover:bg-red-500 hover:border-red-500 transition-all group"
+          aria-label="Next slide"
+        >
+          <FaChevronRight className="text-xl group-hover:scale-110 transition-transform" />
+        </button>
+
+        {/* Slide Indicators */}
+        <div className="absolute bottom-24 sm:bottom-32 left-1/2 -translate-x-1/2 z-20 flex gap-2 sm:gap-3">
+          {heroSlides.map((_, index) => (
+            <button
+              key={index}
+              onClick={() => {
+                setDirection(index > currentSlide ? 1 : -1);
+                setCurrentSlide(index);
+              }}
+              className={`transition-all duration-300 rounded-full ${
+                index === currentSlide 
+                  ? 'w-8 sm:w-12 h-2 bg-red-500' 
+                  : 'w-2 h-2 bg-white/40 hover:bg-white/60'
+              }`}
+              aria-label={`Go to slide ${index + 1}`}
+            />
+          ))}
+        </div>
 
         {/* Animated Grid Pattern */}
-        <div className="absolute inset-0 opacity-10">
+        <div className="absolute inset-0 opacity-10 pointer-events-none">
           <motion.div
             className="absolute inset-0"
             style={{
@@ -115,8 +229,8 @@ export default function HomePage() {
           />
         </div>
 
-        {/* Floating Particles - Enhanced */}
-        <div className="absolute inset-0">
+        {/* Floating Particles */}
+        <div className="absolute inset-0 pointer-events-none">
           {[...Array(30)].map((_, i) => (
             <motion.div
               key={i}
@@ -145,13 +259,15 @@ export default function HomePage() {
 
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 py-20 z-10 w-full">
           {/* Hero Content */}
-          <div className="max-w-4xl mx-auto text-center">
+          <AnimatePresence mode="wait">
             <motion.div
+              key={currentSlide}
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.2 }}
+              exit={{ opacity: 0, y: -30 }}
+              transition={{ duration: 0.5 }}
+              className="max-w-4xl mx-auto text-center"
             >
-
               {/* Main Heading */}
               <motion.h1
                 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold mb-6 text-white leading-tight"
@@ -164,29 +280,23 @@ export default function HomePage() {
                 }}
                 transition={{ duration: 3, repeat: Infinity }}
               >
-                Premium Auto Parts
+                {heroSlides[currentSlide].title}
                 <br />
-                <span className="text-red-500">KR MOTORS</span>
+                <span className="text-red-500">{heroSlides[currentSlide].subtitle}</span>
               </motion.h1>
 
               {/* Description */}
               <motion.p
                 className="text-lg sm:text-xl md:text-2xl text-slate-300 mb-8 leading-relaxed max-w-3xl mx-auto"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.4, duration: 0.8 }}
               >
-                Discover genuine parts, expert service, and unbeatable prices.
+                {heroSlides[currentSlide].description}
                 <br className="hidden sm:block" />
-                <span className="text-red-400 font-semibold">Your vehicle deserves the best.</span>
+                <span className="text-red-400 font-semibold">{heroSlides[currentSlide].highlight}</span>
               </motion.p>
 
               {/* CTA Buttons */}
               <motion.div
                 className="flex flex-col sm:flex-row gap-4 justify-center items-center"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.6, duration: 0.8 }}
               >
                 <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                   <Link
@@ -214,8 +324,7 @@ export default function HomePage() {
                 </motion.div>
               </motion.div>
             </motion.div>
-          </div>
-
+          </AnimatePresence>
 
           {/* Stats Section */}
           <motion.div
@@ -236,20 +345,18 @@ export default function HomePage() {
                 <div className="text-3xl sm:text-4xl font-bold text-red-500 mb-2">{stat.number}</div>
                 <div className="text-sm text-slate-400">{stat.label}</div>
                 
-                {/* Glow effect */}
                 <div className="absolute inset-0 bg-red-500/0 group-hover:bg-red-500/10 rounded-2xl transition-all duration-300" />
               </motion.div>
             ))}
           </motion.div>
         </div>
 
-        {/* Enhanced Scroll Indicator */}
+        {/* Scroll Indicator */}
         <motion.div
           className="absolute bottom-10 left-1/2 transform -translate-x-1/2 flex flex-col items-center gap-2"
           animate={{ y: [0, 10, 0] }}
           transition={{ duration: 2, repeat: Infinity }}
         >
-          <span className="text-xs text-slate-400 uppercase tracking-wider"></span>
           <div className="w-6 h-10 border-2 border-white/30 rounded-full flex justify-center p-2">
             <motion.div
               className="w-1.5 h-1.5 bg-red-500 rounded-full"
@@ -260,9 +367,8 @@ export default function HomePage() {
         </motion.div>
       </section>
 
-      {/* FEATURES SECTION - Enhanced */}
+      {/* FEATURES SECTION */}
       <section className="py-20 sm:py-24 md:py-32 bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 relative overflow-hidden">
-        {/* Animated background elements */}
         <div className="absolute inset-0 overflow-hidden">
           <motion.div
             className="absolute -top-1/2 -left-1/4 w-96 h-96 bg-red-500/10 rounded-full blur-3xl"
@@ -289,7 +395,6 @@ export default function HomePage() {
           whileInView="show"
           viewport={{ once: true, amount: 0.2 }}
         >
-          {/* Section Header */}
           <motion.div className="text-center mb-16" variants={fadeInUp}>
             <motion.div
               className="inline-block px-4 py-2 bg-red-500/20 backdrop-blur-sm border border-red-500/30 rounded-full mb-4"
@@ -305,7 +410,6 @@ export default function HomePage() {
             </p>
           </motion.div>
 
-          {/* Features Grid */}
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {features.map((item, i) => (
               <motion.div
@@ -314,12 +418,9 @@ export default function HomePage() {
                 variants={scaleIn}
                 whileHover={{ y: -10 }}
               >
-                {/* Card */}
                 <div className="relative p-8 bg-gradient-to-br from-slate-800/80 to-slate-900/80 backdrop-blur-xl border border-white/10 rounded-3xl overflow-hidden h-full">
-                  {/* Gradient overlay on hover */}
                   <div className={`absolute inset-0 bg-gradient-to-br ${item.color} opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
                   
-                  {/* Icon with glow */}
                   <motion.div
                     className="relative mb-6 inline-flex p-4 bg-slate-800/50 rounded-2xl"
                     whileHover={{ rotate: 360, scale: 1.1 }}
@@ -329,11 +430,9 @@ export default function HomePage() {
                     <div className="absolute inset-0 bg-red-500/20 rounded-2xl blur-xl group-hover:bg-red-500/40 transition-all" />
                   </motion.div>
 
-                  {/* Content */}
                   <h3 className="text-2xl font-bold text-white mb-3 relative z-10">{item.title}</h3>
                   <p className="text-slate-300 leading-relaxed relative z-10">{item.text}</p>
 
-                  {/* Bottom accent line */}
                   <motion.div
                     className="absolute bottom-0 left-0 h-1 bg-gradient-to-r from-red-500 to-red-600"
                     initial={{ width: 0 }}
@@ -342,7 +441,6 @@ export default function HomePage() {
                     transition={{ delay: i * 0.2, duration: 0.8 }}
                   />
 
-                  {/* Shine effect */}
                   <motion.div
                     className="absolute top-0 -left-full h-full w-1/2 bg-gradient-to-r from-transparent via-white/10 to-transparent skew-x-12"
                     whileHover={{ left: "150%" }}
@@ -355,9 +453,8 @@ export default function HomePage() {
         </motion.div>
       </section>
 
-      {/* CTA SECTION - Enhanced */}
+      {/* CTA SECTION */}
       <section className="relative py-24 sm:py-32 overflow-hidden">
-        {/* Parallax Background */}
         <motion.div className="absolute inset-0" style={{ y }}>
           <img
             src="homepage2.png"
@@ -368,7 +465,6 @@ export default function HomePage() {
           <div className="absolute inset-0 bg-gradient-to-r from-slate-900/95 via-slate-900/90 to-slate-900/95"></div>
         </motion.div>
 
-        {/* Animated overlay */}
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-red-900/10 to-transparent" />
 
         <motion.div
